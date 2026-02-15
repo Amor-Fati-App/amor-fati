@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "motion-plus": "https://api.motion.dev/registry.tgz?package=motion-plus&version=2.0.2&token=0d22afb96cd2d3f2fbd2358ef4d04800acdb5952222c48420f50a42590aa1614"
+  }
+}
