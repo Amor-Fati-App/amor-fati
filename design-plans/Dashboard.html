@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amor Fati - The Dashboard</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Montserrat:wght@400;500;600;700&family=Pinyon+Script&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#050505',
+                        panel: '#0f0f0f',         // Slightly lighter than void for depth
+                        surface: '#181818',       // Card surfaces
+                        gold: '#d4af37',
+                        ivory: '#f2e8e3',
+                        subtle: '#a1a1aa',
+                        accent: '#4a0404'         // Deep red accent
+                    },
+                    fontFamily: {
+                        display: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Montserrat"', 'sans-serif'],
+                        script: ['"Pinyon Script"', 'cursive'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'flip': 'flip 0.6s cubic-bezier(0.455, 0.030, 0.515, 0.955) both',
+                        'shine': 'shine 2s infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-5px)' },
+                        },
+                        shine: {
+                            '0%': { backgroundPosition: '-100%' },
+                            '100%': { backgroundPosition: '200%' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050505;
+            color: #f2e8e3;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* --- LAYOUT UTILITIES --- */
+        .glass-panel {
+            background: #0f0f0f;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .nav-item {
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        .nav-item:hover, .nav-item.active {
+            color: #d4af37;
+            background: rgba(212, 175, 55, 0.05);
+        }
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 3px;
+            background: #d4af37;
+        }
+
+        /* --- CARD FLIP LOGIC --- */
+        .card-container {
+            perspective: 1000px;
+        }
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+        }
+        .card-flip-active .card-inner {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .card-back {
+            background: linear-gradient(135deg, #1a1a1a 0%, #050505 100%);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+        }
+        .card-front {
+            background: #121212;
+            transform: rotateY(180deg);
+            overflow: hidden;
+        }
+
+        /* --- CUSTOM SCROLLBAR --- */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #d4af37; }
+
+        /* Custom Cursor */
+        .cursor-dot {
+            width: 6px; height: 6px; background-color: #d4af37;
+            position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+            border-radius: 50%; pointer-events: none; z-index: 9999;
+            box-shadow: 0 0 10px #d4af37;
+        }
+        .cursor-outline {
+            width: 40px; height: 40px; border: 1px solid rgba(212, 175, 55, 0.5);
+            position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+            border-radius: 50%; pointer-events: none; z-index: 9999;
+            transition: width 0.3s, height 0.3s, background-color 0.3s;
+        }
+    </style>
+</head>
+<body class="flex h-screen w-screen selection:bg-gold selection:text-black font-sans">
+
+    <!-- Cursor -->
+    <div class="cursor-dot hidden md:block"></div>
+    <div class="cursor-outline hidden md:block"></div>
+
+    <!-- BACKGROUND NOISE/ATMOSPHERE -->
+    <div class="fixed inset-0 z-0 bg-void">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_#1a0505_0%,_transparent_40%)] opacity-60"></div>
+    </div>
+
+    <!-- SIDEBAR (Desktop) / BOTTOM NAV (Mobile) -->
+    <nav class="fixed bottom-0 md:static md:w-64 w-full h-16 md:h-full bg-panel border-t md:border-t-0 md:border-r border-white/10 z-50 flex md:flex-col justify-between p-2 md:p-6 shadow-2xl">
+        <!-- Logo Area -->
+        <div class="hidden md:block mb-10 text-center">
+            <h1 class="font-display text-2xl text-white tracking-widest font-bold">AMOR <span class="text-gold">FATI</span></h1>
+            <p class="text-[10px] text-subtle uppercase tracking-[0.3em] mt-1">Dashboard</p>
+        </div>
+
+        <!-- Nav Links -->
+        <div class="flex md:flex-col justify-around w-full gap-2">
+            <a href="#" class="nav-item active flex items-center md:gap-4 p-3 rounded-md text-white" rel="nofollow">
+                <i class="ph-fill ph-house-line text-xl"></i>
+                <span class="hidden md:inline font-sans text-xs uppercase tracking-widest font-semibold">Sanctuary</span>
+            </a>
+            <a href="#" class="nav-item flex items-center md:gap-4 p-3 rounded-md text-subtle hover:text-white" rel="nofollow">
+                <i class="ph ph-cards text-xl"></i>
+                <span class="hidden md:inline font-sans text-xs uppercase tracking-widest font-semibold">Reading</span>
+            </a>
+            <a href="#" class="nav-item flex items-center md:gap-4 p-3 rounded-md text-subtle hover:text-white" rel="nofollow">
+                <i class="ph ph-book-open-text text-xl"></i>
+                <span class="hidden md:inline font-sans text-xs uppercase tracking-widest font-semibold">Journal</span>
+            </a>
+            <a href="#" class="nav-item flex items-center md:gap-4 p-3 rounded-md text-subtle hover:text-white" rel="nofollow">
+                <i class="ph ph-users-three text-xl"></i>
+                <span class="hidden md:inline font-sans text-xs uppercase tracking-widest font-semibold">Coven</span>
+            </a>
+        </div>
+
+        <!-- User Profile (Desktop) -->
+        <div class="hidden md:flex items-center gap-4 mt-auto p-3 border-t border-white/5 pt-6 cursor-pointer hover:bg-white/5 rounded-md transition-colors">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop" class="w-10 h-10 rounded-full border border-gold/30 object-cover" alt="User">
+            <div>
+                <span class="block font-sans text-xs text-white font-bold">Elara Vance</span>
+                <span class="block font-sans text-[10px] text-gold uppercase tracking-wide">Acolyte Lvl. 3</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 relative z-10 p-6 md:p-10 overflow-y-auto mb-16 md:mb-0">
+        
+        <!-- TOP HEADER -->
+        <header class="flex justify-between items-end mb-10">
+            <div>
+                <span class="font-sans text-[10px] uppercase tracking-[0.2em] text-gold font-bold mb-1 block">October 24, 2023</span>
+                <h2 class="font-display text-4xl md:text-5xl text-white">Good Evening, <span class="text-ivory/70 italic script-font">Elara</span></h2>
+            </div>
+            <div class="flex items-center gap-6">
+                <!-- Cosmic Weather Widget -->
+                <div class="hidden md:flex items-center gap-3 bg-panel border border-white/10 px-4 py-2 rounded-full">
+                    <i class="ph-fill ph-moon text-gold"></i>
+                    <span class="text-xs text-subtle uppercase tracking-wider">Waxing Gibbous</span>
+                    <span class="w-[1px] h-4 bg-white/10"></span>
+                    <i class="ph-fill ph-sun text-white"></i>
+                    <span class="text-xs text-subtle uppercase tracking-wider">Scorpio Season</span>
+                </div>
+                <!-- Notifications -->
+                <button class="relative p-2 text-white hover:text-gold transition-colors">
+                    <i class="ph ph-bell text-xl"></i>
+                    <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                </button>
+            </div>
+        </header>
+
+        <!-- DASHBOARD GRID -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- LEFT SPHERE (Main Active Area) -->
+            <div class="lg:col-span-2 space-y-8">
+                
+                <!-- HERO: DAILY DRAW CARD -->
+                <div class="glass-panel rounded-xl p-8 relative overflow-hidden group">
+                    <!-- Ambient Glow -->
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-[80px] pointer-events-none"></div>
+                    
+                    <div class="flex flex-col md:flex-row gap-10 items-center">
+                        <!-- THE CARD (Interactive) -->
+                        <div class="card-container w-48 h-72 md:w-56 md:h-80 flex-shrink-0 cursor-pointer" onclick="flipCard(this)">
+                            <div class="card-inner">
+                                <!-- BACK -->
+                                <div class="card-back border-white/20 hover:border-gold/50 shadow-2xl transition-all duration-300">
+                                    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20"></div>
+                                    <div class="text-center p-4">
+                                        <i class="ph-thin ph-star-four text-3xl text-gold mb-2 animate-spin-slow"></i>
+                                        <p class="font-sans text-[10px] uppercase tracking-[0.3em] text-white/50">Your Daily Draw</p>
+                                        <p class="font-display text-xl text-white mt-1">Reveal Fate</p>
+                                    </div>
+                                </div>
+                                <!-- FRONT -->
+                                <div class="card-front">
+                                    <img src="https://images.unsplash.com/photo-1691629339142-fa6512188069?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="w-full h-full object-cover opacity-80" alt="The High Priestess">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+                                    <div class="absolute bottom-4 left-0 w-full text-center">
+                                        <h3 class="font-display text-2xl text-white">The High Priestess</h3>
+                                        <p class="font-sans text-[10px] uppercase tracking-widest text-gold">Intuition • Mystery</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CONTEXT / PROMPT -->
+                        <div class="relative z-10 flex-1 text-center md:text-left">
+                            <h3 class="font-sans text-xs uppercase tracking-[0.25em] text-gold font-bold mb-4">Daily Reflection</h3>
+                            <p class="font-display text-2xl md:text-3xl text-ivory leading-relaxed mb-6">
+                                "What secret knowledge are you hiding from yourself today?"
+                            </p>
+                            <p class="font-sans text-sm text-subtle leading-relaxed mb-8">
+                                The High Priestess calls you to look inward. Validating your intuition is part of your shadow work today.
+                            </p>
+                            <div class="flex flex-col sm:flex-row gap-4">
+                                <button class="px-6 py-3 bg-white text-black font-sans text-xs font-bold uppercase tracking-widest hover:bg-gold transition-colors rounded-sm shadow-lg shadow-white/10">
+                                    <i class="ph-bold ph-pen-nib mr-2"></i> Journal This
+                                </button>
+                                <button class="px-6 py-3 bg-transparent border border-white/20 text-white font-sans text-xs font-bold uppercase tracking-widest hover:border-white hover:bg-white/5 transition-all rounded-sm">
+                                    Full Interpretation
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QUICK ACTIONS -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button class="nav-item group glass-panel p-6 rounded-lg text-left hover:border-gold/30 transition-all">
+                        <div class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-4 group-hover:bg-gold group-hover:text-black transition-colors">
+                             <i class="ph-light ph-cards-three text-2xl"></i>
+                        </div>
+                        <h4 class="font-display text-xl text-white">New Spread</h4>
+                        <p class="text-xs text-subtle mt-1 font-sans">Ask the Oracle a question</p>
+                    </button>
+
+                    <button class="nav-item group glass-panel p-6 rounded-lg text-left hover:border-gold/30 transition-all">
+                        <div class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-4 group-hover:bg-gold group-hover:text-black transition-colors">
+                             <i class="ph-light ph-book-bookmark text-2xl"></i>
+                        </div>
+                        <h4 class="font-display text-xl text-white">Log Dream</h4>
+                        <p class="text-xs text-subtle mt-1 font-sans">Record subconscious signals</p>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- RIGHT SPHERE (Insights & History) -->
+            <div class="space-y-8">
+                
+                <!-- STREAK WIDGET -->
+                <div class="glass-panel p-6 rounded-lg flex items-center justify-between relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-r from-gold/10 to-transparent opacity-50"></div>
+                    <div class="relative z-10">
+                        <span class="block font-display text-3xl text-white">4 Days</span>
+                        <span class="block font-sans text-[10px] uppercase tracking-widest text-gold font-bold">Ritual Streak</span>
+                    </div>
+                    <div class="relative z-10 w-12 h-12 rounded-full border border-gold/40 flex items-center justify-center bg-black">
+                        <i class="ph-fill ph-fire text-gold text-2xl animate-pulse"></i>
+                    </div>
+                </div>
+
+                <!-- RECENT ACTIVITY (The Scroll) -->
+                <div class="glass-panel p-6 rounded-lg h-full max-h-[500px] flex flex-col">
+                    <div class="flex justify-between items-center mb-6">
+                        <h4 class="font-sans text-xs uppercase tracking-[0.2em] text-white/50 font-bold">Recent History</h4>
+                        <a href="#" class="text-[10px] text-gold hover:underline" rel="nofollow">View All</a>
+                    </div>
+
+                    <div class="space-y-4 overflow-y-auto pr-2 custom-scrollbar">
+                        <!-- Entry 1 -->
+                        <div class="group p-3 border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] rounded transition-colors cursor-pointer">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="font-display text-lg text-white group-hover:text-gold transition-colors">Celtic Cross</span>
+                                <span class="text-[10px] text-subtle">Yesterday</span>
+                            </div>
+                            <div class="flex gap-2 mb-2">
+                                <span class="px-2 py-0.5 bg-accent/20 border border-accent/40 rounded text-[9px] uppercase tracking-wider text-rose-200">Love</span>
+                                <span class="px-2 py-0.5 bg-white/5 border border-white/10 rounded text-[9px] uppercase tracking-wider text-subtle">Saturn</span>
+                            </div>
+                            <p class="text-xs text-subtle line-clamp-2">Exploring the connection between my anxiety and the upcoming eclipse...</p>
+                        </div>
+
+                         <!-- Entry 2 -->
+                        <div class="group p-3 border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] rounded transition-colors cursor-pointer">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="font-display text-lg text-white group-hover:text-gold transition-colors">Journal Entry</span>
+                                <span class="text-[10px] text-subtle">Oct 22</span>
+                            </div>
+                            <div class="flex gap-2 mb-2">
+                                <span class="px-2 py-0.5 bg-indigo-900/40 border border-indigo-500/30 rounded text-[9px] uppercase tracking-wider text-indigo-200">Dream</span>
+                            </div>
+                            <p class="text-xs text-subtle line-clamp-2">I was walking through a hallway of mirrors, but I had no reflection. The Tower card kept falling...</p>
+                        </div>
+
+                        <!-- Entry 3 -->
+                        <div class="group p-3 border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] rounded transition-colors cursor-pointer">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="font-display text-lg text-white group-hover:text-gold transition-colors">Daily Draw</span>
+                                <span class="text-[10px] text-subtle">Oct 21</span>
+                            </div>
+                            <div class="flex gap-2 items-center">
+                                <span class="text-xs text-white">Card: <span class="text-gold italic">Ace of Swords</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Interaction Logic
+        function flipCard(el) {
+            el.classList.toggle('card-flip-active');
+        }
+
+        // Custom Cursor Logic
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+
+        window.addEventListener('mousemove', (e) => {
+            cursorDot.style.left = `${e.clientX}px`;
+            cursorDot.style.top = `${e.clientY}px`;
+            
+            cursorOutline.animate({
+                left: `${e.clientX}px`,
+                top: `${e.clientY}px`
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        document.querySelectorAll('button, a, .card-container, .group').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorOutline.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                cursorOutline.style.backgroundColor = 'rgba(212, 175, 55, 0.05)';
+                cursorOutline.style.borderColor = '#d4af37';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursorOutline.style.transform = 'translate(-50%, -50%) scale(1)';
+                cursorOutline.style.backgroundColor = 'transparent';
+                cursorOutline.style.borderColor = 'rgba(212, 175, 55, 0.5)';
+            });
+        });
+
+        // Initialize Animation Delay for list items
+        document.querySelectorAll('.group').forEach((el, index) => {
+            el.style.animation = `fadeInUp 0.5s ease forwards ${index * 0.1}s`;
+            el.style.opacity = '0'; // hidden initially via basic css or class
+        });
+        
+    </script>
+    <style>
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</body>
+</html>

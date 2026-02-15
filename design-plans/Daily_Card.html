@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amor Fati - Daily Draw</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Montserrat:wght@400;500;600;700&family=Pinyon+Script&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#050505',
+                        panel: '#0a0a0a',
+                        surface: '#121212',
+                        gold: '#d4af37',
+                        ivory: '#f2e8e3'
+                    },
+                    fontFamily: {
+                        display: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Montserrat"', 'sans-serif'],
+                        script: ['"Pinyon Script"', 'cursive'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 1s ease-out forwards',
+                        'slide-up': 'slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'pulse-gold': 'pulseGold 2s infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        pulseGold: {
+                            '0%, 100%': { boxShadow: '0 0 0px rgba(212, 175, 55, 0)' },
+                            '50%': { boxShadow: '0 0 20px rgba(212, 175, 55, 0.3)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050505;
+            color: #f2e8e3;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* CARD FLIP PHYSICS */
+        .card-scene { perspective: 1500px; }
+        .card-obj {
+            width: 100%; height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .card-obj.flipped { transform: rotateY(180deg); }
+        .card-face {
+            position: absolute; width: 100%; height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        .card-back {
+            background: linear-gradient(135deg, #150505 0%, #000 100%);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .card-front { transform: rotateY(180deg); background: #000; }
+
+        /* UI UTILITIES */
+        .glass-panel {
+            background: rgba(10, 10, 10, 0.95); /* High opacity for readability */
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        /* TEXTAREA AUTOGROW */
+        textarea {
+            field-sizing: content;
+            min-height: 80px;
+        }
+        
+        /* Custom Cursor */
+        .cursor-dot {
+            width: 6px; height: 6px; background-color: #d4af37;
+            position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+            border-radius: 50%; pointer-events: none; z-index: 9999;
+            box-shadow: 0 0 10px #d4af37;
+        }
+        .cursor-outline {
+            width: 40px; height: 40px; border: 1px solid rgba(212, 175, 55, 0.5);
+            position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+            border-radius: 50%; pointer-events: none; z-index: 9999;
+            transition: width 0.3s, height 0.3s, background-color 0.3s;
+        }
+    </style>
+</head>
+<body class="min-h-screen w-full flex flex-col font-sans selection:bg-gold selection:text-black">
+
+    <!-- Cursor -->
+    <div class="cursor-dot hidden md:block"></div>
+    <div class="cursor-outline hidden md:block"></div>
+
+    <!-- Background -->
+    <div class="fixed inset-0 z-0 bg-void">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_#1a1010_0%,_transparent_60%)] opacity-40"></div>
+        <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=2600&auto=format&fit=crop" class="w-full h-full object-cover opacity-10 mix-blend-screen" alt="Atmosphere">
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 p-6 flex justify-between items-center">
+        <a href="#" class="text-white/50 hover:text-white transition-colors flex items-center gap-2 group" rel="nofollow">
+            <i class="ph ph-arrow-left text-xl group-hover:-translate-x-1 transition-transform"></i>
+            <span class="font-sans text-[10px] uppercase tracking-widest hidden md:inline">Sanctuary</span>
+        </a>
+        <div class="text-center">
+            <h1 class="font-display text-xl text-white tracking-widest">AMOR <span class="text-gold">FATI</span></h1>
+        </div>
+        <div class="flex gap-4">
+             <button class="text-white/50 hover:text-white transition-colors"><i class="ph ph-share-network text-xl"></i></button>
+             <button class="text-white/50 hover:text-white transition-colors"><i class="ph ph-dots-three-vertical text-xl"></i></button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="relative z-10 flex-1 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-20 p-6 pt-24 md:pt-0 max-w-6xl mx-auto w-full">
+        
+        <!-- LEFT COLUMN: THE CARD -->
+        <div class="w-full md:w-[400px] h-[580px] card-scene flex-shrink-0 relative">
+            <div id="main-card" class="card-obj cursor-pointer group">
+                
+                <!-- Card Back -->
+                <div class="card-face card-back">
+                    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30"></div>
+                    <div class="text-center p-6 border-2 border-gold/10 m-4 h-[94%] flex flex-col items-center justify-center rounded-lg">
+                        <i class="ph-thin ph-star-four text-5xl text-gold mb-4 animate-pulse-gold"></i>
+                        <span class="font-display text-2xl text-white/20">The Void Stares Back</span>
+                    </div>
+                </div>
+
+                <!-- Card Front (Image) -->
+                <div class="card-face card-front relative">
+                    <div class="absolute inset-0 bg-gold/10 z-10 pointer-events-none mix-blend-overlay"></div>
+                    
+                    <!-- Card Art (Using Ace of Cups placeholder) -->
+                    <img src="https://images.unsplash.com/photo-1627764574958-fb54cd7d7448?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFyb3R8ZW58MHx8MHx8fDA%3D" class="w-full h-full object-cover" alt="The Tarot Card">
+                    
+                    <!-- Card Label Overlay -->
+                    <div class="absolute bottom-0 w-full bg-gradient-to-t from-black via-black/80 to-transparent p-6 pt-20 text-center">
+                        <h2 class="font-display text-4xl text-white drop-shadow-lg mb-1">Ace of Cups</h2>
+                        <span class="font-sans text-[10px] text-gold uppercase tracking-[0.3em] font-bold">New Emotional Beginnings</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Floating Action (Instruction) -->
+            <div id="tap-instruction" class="absolute -bottom-12 w-full text-center animate-bounce text-white/30 text-xs font-sans tracking-widest uppercase">
+                Tap to Reveal
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: THE ALTAR (Insight & Actions) -->
+        <div id="insight-panel" class="w-full md:max-w-md opacity-0 transition-all duration-1000 transform translate-y-8">
+            
+            <!-- AI Interpretation Component -->
+            <div class="glass-panel rounded-xl p-8 mb-6 relative overflow-hidden">
+                <!-- Decorative Top Border -->
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold/50 to-transparent"></div>
+                
+                <h3 class="font-sans text-[10px] text-gold uppercase tracking-[0.25em] font-bold mb-4 flex items-center gap-2">
+                    <i class="ph-fill ph-sparkle"></i> The Oracle Speaks
+                </h3>
+
+                <p class="font-display text-2xl text-white leading-relaxed mb-4">
+                    "Your cup runneth over. The universe is offering a new emotional opportunity—but you must be open to receive it."
+                </p>
+                <div class="h-px w-12 bg-white/10 mb-4"></div>
+                <p class="font-sans text-sm text-ivory/80 leading-relaxed font-medium">
+                    The Ace represents raw potential. In the context of your recent Saturn transit, this suggests a softening of boundaries. Allow yourself to feel without analyzing the utility of the emotion.
+                </p>
+            </div>
+
+            <!-- Quick Journal / Reflection -->
+            <div class="glass-panel rounded-xl p-1 mb-6">
+                <div class="bg-[#150a0a] rounded-lg p-4">
+                    <label for="reflection" class="block font-sans text-[10px] text-white/40 uppercase tracking-widest mb-3">
+                        Moment of Reflection
+                    </label>
+                    <textarea id="reflection" class="w-full bg-transparent border-0 text-white text-sm focus:ring-0 placeholder:text-white/20 resize-none font-display italic leading-relaxed" placeholder="What feeling are you ignoring right now?"></textarea>
+                </div>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="saveReading()" id="btn-save" class="group relative overflow-hidden p-4 bg-white text-black rounded-sm font-sans text-xs font-bold uppercase tracking-widest hover:bg-gold transition-colors shadow-lg">
+                    <span class="relative z-10 flex items-center justify-center gap-2">
+                        <i class="ph-bold ph-check"></i> Save & Close
+                    </span>
+                </button>
+                <button class="p-4 bg-transparent border border-white/20 text-white rounded-sm font-sans text-xs font-bold uppercase tracking-widest hover:border-white hover:bg-white/5 transition-all">
+                    Expand Entry
+                </button>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        // DOM Elements
+        const card = document.getElementById('main-card');
+        const instruction = document.getElementById('tap-instruction');
+        const panel = document.getElementById('insight-panel');
+        const saveBtn = document.getElementById('btn-save');
+
+        // State
+        let revealed = false;
+
+        // Reveal Logic
+        card.addEventListener('click', () => {
+            if(!revealed) {
+                // Flip animation
+                card.classList.add('flipped');
+                revealed = true;
+                
+                // Hide instruction
+                instruction.style.opacity = '0';
+
+                // Show Content after flip delay
+                setTimeout(() => {
+                    panel.classList.remove('opacity-0', 'translate-y-8');
+                    panel.classList.add('opacity-100', 'translate-y-0');
+                }, 600);
+            }
+        });
+
+        // Trigger reveal automatically for demo purposes after 1s
+        setTimeout(() => {
+            card.click();
+        }, 1000);
+
+        // Save Animation
+        function saveReading() {
+            saveBtn.innerHTML = `<span class="relative z-10 flex items-center justify-center gap-2"><i class="ph-bold ph-check-circle"></i> Saved</span>`;
+            saveBtn.classList.add('bg-green-500', 'text-white');
+            saveBtn.classList.remove('bg-white', 'text-black', 'hover:bg-gold');
+            
+            setTimeout(() => {
+               // In a real app, this would route back
+               // window.location.href = '/dashboard';
+               alert("Reading saved to Grimoire.");
+            }, 800);
+        }
+
+        // Cursor Logic
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+
+        window.addEventListener('mousemove', (e) => {
+            cursorDot.style.left = `${e.clientX}px`;
+            cursorDot.style.top = `${e.clientY}px`;
+            
+            cursorOutline.animate({
+                left: `${e.clientX}px`,
+                top: `${e.clientY}px`
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        document.querySelectorAll('button, a, textarea, .card-obj').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorOutline.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                cursorOutline.style.backgroundColor = 'rgba(212, 175, 55, 0.1)';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursorOutline.style.transform = 'translate(-50%, -50%) scale(1)';
+                cursorOutline.style.backgroundColor = 'transparent';
+            });
+        });
+    </script>
+</body>
+</html>

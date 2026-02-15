@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amor Fati - The Seeker Profile</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=Pinyon+Script&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#050505',
+                        surface: '#0A0A0A',
+                        card: '#111111',
+                        border: '#2A2A2A',
+                        gold: '#C5A059',
+                        silver: '#A1A1AA',
+                        highlight: '#E2E8F0'
+                    },
+                    fontFamily: {
+                        heading: ['"Cinzel"', 'serif'],
+                        body: ['"Cormorant Garamond"', 'serif'],
+                        ui: ['"Inter"', 'sans-serif'],
+                        script: ['"Pinyon Script"', 'cursive'],
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                        'noise': "url('https://www.transparenttextures.com/patterns/stardust.png')",
+                    },
+                    boxShadow: {
+                        'glow': '0 0 20px rgba(197, 160, 89, 0.15)',
+                        'card': '0 10px 30px -5px rgba(0, 0, 0, 0.5)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #050505;
+            color: #d4d4d8;
+        }
+
+        /* Subtle Noise Overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+        /* Hexagon Clip Path for Avatar */
+        .clip-hex {
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+
+        .glass-panel {
+            background: rgba(17, 17, 17, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Hover Effects */
+        .menu-item:hover .icon-box {
+            background-color: #C5A059;
+            color: #000;
+            border-color: #C5A059;
+        }
+        .menu-item:hover .arrow-icon {
+            transform: translateX(4px);
+            color: #C5A059;
+        }
+    </style>
+</head>
+<body class="min-h-screen relative overflow-x-hidden selection:bg-gold selection:text-black font-ui">
+
+    <div class="noise-overlay"></div>
+
+    <!-- MAIN CONTAINER (Mobile Centric View) -->
+    <main class="relative z-10 max-w-md mx-auto min-h-screen bg-void shadow-2xl pb-24">
+        
+        <!-- HEADER -->
+        <header class="flex justify-between items-center p-6 sticky top-0 bg-void/80 backdrop-blur-md z-50 border-b border-white/5">
+            <button class="text-white/70 hover:text-gold transition-colors">
+                <i class="ph ph-arrow-left text-xl"></i>
+            </button>
+            <h1 class="font-heading text-lg font-bold text-white tracking-widest uppercase">The Seeker</h1>
+            <button class="text-white/70 hover:text-gold transition-colors">
+                <i class="ph ph-gear text-xl"></i>
+            </button>
+        </header>
+
+        <!-- PROFILE HERO -->
+        <section class="flex flex-col items-center pt-8 pb-10 px-6 relative">
+            <!-- Decorative circle behind avatar -->
+            <div class="absolute top-12 w-64 h-64 bg-gold/5 rounded-full blur-3xl pointer-events-none"></div>
+
+            <!-- Avatar -->
+            <div class="relative group cursor-pointer mb-6">
+                <div class="w-32 h-32 clip-hex bg-gradient-to-br from-gray-800 to-black p-1 transition-transform group-hover:scale-105 duration-500 ease-out">
+                    <div class="w-full h-full clip-hex bg-card overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=2576&auto=format&fit=crop" 
+                             alt="User Avatar" 
+                             class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity">
+                    </div>
+                </div>
+                <!-- Edit Badge -->
+                <div class="absolute -bottom-1 right-0 bg-card border border-gold/30 rounded-full w-8 h-8 flex items-center justify-center text-gold shadow-lg hover:bg-gold hover:text-black transition-colors">
+                    <i class="ph-fill ph-pencil-simple"></i>
+                </div>
+            </div>
+
+            <!-- Name & Title -->
+            <h2 class="font-heading text-2xl text-white font-bold tracking-wide">Isabella V.</h2>
+            <p class="font-body text-gold italic text-lg mt-1">Adept Mystic</p>
+            
+            <!-- Quick Stats -->
+            <div class="flex items-center gap-8 mt-6 w-full justify-center">
+                <div class="text-center">
+                    <span class="block font-heading text-2xl text-white font-bold">142</span>
+                    <span class="text-[10px] uppercase tracking-[0.2em] text-gray-500 font-bold">Readings</span>
+                </div>
+                <div class="h-8 w-px bg-white/10"></div>
+                <div class="text-center">
+                    <span class="block font-heading text-2xl text-white font-bold">12</span>
+                    <span class="text-[10px] uppercase tracking-[0.2em] text-gray-500 font-bold">Streak</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- COSMIC BLUEPRINT -->
+        <section class="px-5 mb-8">
+            <div class="flex items-center gap-3 mb-4">
+                <i class="ph-fill ph-sparkle text-gold/70"></i>
+                <h3 class="text-xs font-bold uppercase tracking-widest text-gray-400">Cosmic Blueprint</h3>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-3">
+                
+                <!-- Astrology Block -->
+                <div class="glass-panel rounded-xl p-4 flex flex-col justify-between h-36 border-l-2 border-l-purple-900/50 hover:border-l-purple-500 transition-colors">
+                    <div class="flex justify-between items-start">
+                        <span class="text-[10px] uppercase text-gray-500 font-bold tracking-wider">Sun Sign</span>
+                        <i class="ph-fill ph-star-of-david text-purple-400"></i>
+                    </div>
+                    <div>
+                        <div class="font-heading text-xl text-white">Scorpio</div>
+                        <div class="text-xs text-gray-500 font-ui mt-1">Water • Fixed • Mars</div>
+                    </div>
+                </div>
+
+                <!-- Birth Card Block -->
+                <div class="glass-panel rounded-xl p-4 flex flex-col justify-between h-36 border-l-2 border-l-blue-900/50 hover:border-l-blue-500 transition-colors relative overflow-hidden group cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1672509144656-9147d6ef601e?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cHJpZXN0ZXNzfGVufDB8fDB8fHww" 
+                         alt="High Priestess" 
+                         class="absolute right-0 top-0 h-full w-24 object-cover opacity-20 group-hover:opacity-40 transition-opacity mask-image-fade" 
+                         style="mask-image: linear-gradient(to left, black, transparent);">
+                         
+                    <div class="relative z-10 flex justify-between items-start">
+                        <span class="text-[10px] uppercase text-gray-500 font-bold tracking-wider">Birth Card</span>
+                        <i class="ph-fill ph-cards text-blue-400"></i>
+                    </div>
+                    <div class="relative z-10">
+                        <div class="font-heading text-xl text-white leading-tight">The High Priestess</div>
+                        <div class="text-xs text-gray-500 font-ui mt-1">II</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MENU SECTIONS -->
+        <section class="px-5 space-y-2">
+            
+            <!-- SECTION HEADER -->
+            <div class="flex items-center gap-3 mt-8 mb-2">
+                <i class="ph-fill ph-scroll text-gold/70"></i>
+                <h3 class="text-xs font-bold uppercase tracking-widest text-gray-400">Grimoire & Settings</h3>
+            </div>
+
+            <!-- MENU ITEM: NOTIFICATIONS -->
+            <button class="menu-item w-full glass-panel p-4 rounded-xl flex items-center justify-between group transition-all active:scale-[0.98]">
+                <div class="flex items-center gap-4">
+                    <div class="icon-box w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-400 transition-colors">
+                        <i class="ph ph-bell text-lg"></i>
+                    </div>
+                    <div class="text-left">
+                        <div class="font-heading text-sm font-bold text-white group-hover:text-gold transition-colors">The Whispers</div>
+                        <div class="text-xs text-gray-500">Notifications & Daily Reminders</div>
+                    </div>
+                </div>
+                <i class="arrow-icon ph ph-caret-right text-gray-600 transition-transform"></i>
+            </button>
+
+            <!-- MENU ITEM: SUBSCRIPTION -->
+            <button class="menu-item w-full glass-panel p-4 rounded-xl flex items-center justify-between group transition-all active:scale-[0.98]">
+                <div class="flex items-center gap-4">
+                    <div class="icon-box w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-400 transition-colors">
+                        <i class="ph ph-crown text-lg"></i>
+                    </div>
+                    <div class="text-left">
+                        <div class="font-heading text-sm font-bold text-white group-hover:text-gold transition-colors">Inner Circle</div>
+                        <div class="text-xs text-gray-500">Manage Subscription (Active)</div>
+                    </div>
+                </div>
+                <!-- Badge -->
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-gold/10 text-gold border border-gold/20 mr-2">Premium</span>
+            </button>
+
+            <!-- MENU ITEM: PREFERENCES -->
+            <button class="menu-item w-full glass-panel p-4 rounded-xl flex items-center justify-between group transition-all active:scale-[0.98]">
+                <div class="flex items-center gap-4">
+                    <div class="icon-box w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-400 transition-colors">
+                        <i class="ph ph-sliders-horizontal text-lg"></i>
+                    </div>
+                    <div class="text-left">
+                        <div class="font-heading text-sm font-bold text-white group-hover:text-gold transition-colors">Rituals</div>
+                        <div class="text-xs text-gray-500">App Preferences & Appearance</div>
+                    </div>
+                </div>
+                <i class="arrow-icon ph ph-caret-right text-gray-600 transition-transform"></i>
+            </button>
+            
+            <!-- MENU ITEM: DATA & PRIVACY -->
+            <button class="menu-item w-full glass-panel p-4 rounded-xl flex items-center justify-between group transition-all active:scale-[0.98]">
+                <div class="flex items-center gap-4">
+                    <div class="icon-box w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-400 transition-colors">
+                        <i class="ph ph-lock-key text-lg"></i>
+                    </div>
+                    <div class="text-left">
+                        <div class="font-heading text-sm font-bold text-white group-hover:text-gold transition-colors">Secrets</div>
+                        <div class="text-xs text-gray-500">Privacy & Data Management</div>
+                    </div>
+                </div>
+                <i class="arrow-icon ph ph-caret-right text-gray-600 transition-transform"></i>
+            </button>
+
+        </section>
+
+        <!-- FOOTER ACTIONS -->
+        <div class="mt-12 px-6 flex justify-center">
+            <button class="text-xs font-bold uppercase tracking-widest text-red-900/60 hover:text-red-500 transition-colors py-2 px-4">
+                Sign Out
+            </button>
+        </div>
+
+        <!-- BOTTOM NAV (Sticky) -->
+        <nav class="fixed bottom-0 left-0 w-full bg-void/90 backdrop-blur-md border-t border-white/5 py-4 px-8 flex justify-between items-center z-50 text-gray-500 max-w-md mx-auto right-0">
+            <a href="#" class="flex flex-col items-center gap-1 hover:text-gold transition-colors" rel="nofollow">
+                <i class="ph ph-house text-xl"></i>
+                <span class="text-[9px] uppercase tracking-widest font-bold">Hub</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-1 hover:text-gold transition-colors" rel="nofollow">
+                <i class="ph ph-book-open text-xl"></i>
+                <span class="text-[9px] uppercase tracking-widest font-bold">Journal</span>
+            </a>
+            <div class="relative -top-6">
+                <button class="w-14 h-14 rounded-full bg-gradient-to-tr from-gold to-yellow-600 text-black flex items-center justify-center shadow-glow border-4 border-void hover:scale-105 transition-transform">
+                    <i class="ph-fill ph-cards text-2xl"></i>
+                </button>
+            </div>
+            <a href="#" class="flex flex-col items-center gap-1 hover:text-gold transition-colors" rel="nofollow">
+                <i class="ph ph-books text-xl"></i>
+                <span class="text-[9px] uppercase tracking-widest font-bold">Library</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-1 text-gold" rel="nofollow">
+                <i class="ph-fill ph-user text-xl"></i>
+                <span class="text-[9px] uppercase tracking-widest font-bold">Seeker</span>
+            </a>
+        </nav>
+
+    </main>
+</body>
+</html>

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amor Fati - The Archives</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=Pinyon+Script&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#050505',
+                        surface: '#121212',
+                        border: '#262626',
+                        gold: '#C5A059',
+                        silver: '#a3a3a3',
+                    },
+                    fontFamily: {
+                        heading: ['"Cinzel"', 'serif'],
+                        body: ['"Cormorant Garamond"', 'serif'],
+                        ui: ['"Inter"', 'sans-serif'],
+                        script: ['"Pinyon Script"', 'cursive'],
+                    },
+                    animation: {
+                        'fade-in-stagger': 'fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050505;
+            color: #e5e5e5;
+            overflow-x: hidden;
+        }
+
+        /* Ambient Background Grain */
+        .bg-grain {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+            opacity: 0.05;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #C5A059; }
+
+        /* Card Hover Effects */
+        .journal-card {
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .journal-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(197, 160, 89, 0.4);
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.8);
+        }
+
+        /* Tiny Tarot Card Previews */
+        .mini-card {
+            width: 24px;
+            aspect-ratio: 2/3;
+            background-size: cover;
+            border-radius: 2px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.2s;
+        }
+        .mini-card:hover {
+            transform: scale(1.5) translateY(-5px);
+            z-index: 10;
+            border-color: #C5A059;
+        }
+
+        /* Staggered Animation Delays */
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.15s; }
+        .stagger-3 { animation-delay: 0.2s; }
+        .stagger-4 { animation-delay: 0.25s; }
+        .stagger-5 { animation-delay: 0.3s; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col relative selection:bg-gold selection:text-black">
+
+    <div class="bg-grain"></div>
+
+    <!-- STICKY HEADER: SEARCH & FILTER -->
+    <header class="sticky top-0 z-50 w-full bg-void/80 backdrop-blur-md border-b border-white/5 py-4">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            
+            <!-- Brand / Title -->
+            <div class="flex items-center gap-4 w-full md:w-auto">
+                <a href="#" class="font-heading text-xl text-gold tracking-widest hover:text-white transition-colors" rel="nofollow">Amor Fati</a>
+                <span class="text-xs font-ui text-gray-500 uppercase tracking-widest hidden sm:block">/ The Archives</span>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="relative w-full md:w-96 group">
+                <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-gold transition-colors"></i>
+                <input type="text" placeholder="Search by concept, card, or feeling..." 
+                       class="w-full bg-[#121212] border border-white/10 rounded-sm py-2 pl-10 pr-4 text-sm font-ui text-white placeholder-gray-600 focus:outline-none focus:border-gold/50 focus:bg-[#1a1a1a] transition-all">
+            </div>
+
+            <!-- Filters -->
+            <div class="flex items-center gap-2 w-full md:w-auto justify-end overflow-x-auto no-scrollbar">
+                <button class="flex items-center gap-2 px-3 py-1.5 border border-white/10 rounded-sm hover:bg-white/5 hover:border-white/30 transition-all whitespace-nowrap">
+                    <i class="ph ph-calendar text-gray-400"></i>
+                    <span class="text-xs font-ui text-gray-300">Date</span>
+                </button>
+                <button class="flex items-center gap-2 px-3 py-1.5 border border-white/10 rounded-sm hover:bg-white/5 hover:border-white/30 transition-all whitespace-nowrap">
+                    <i class="ph ph-tag text-gray-400"></i>
+                    <span class="text-xs font-ui text-gray-300">Tags</span>
+                </button>
+                <button class="flex items-center gap-2 px-3 py-1.5 border border-white/10 rounded-sm hover:bg-white/5 hover:border-white/30 transition-all whitespace-nowrap">
+                    <i class="ph ph-cards text-gray-400"></i>
+                    <span class="text-xs font-ui text-gray-300">Spreads</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- FLOATING ACTION BUTTON (Mobile/Desktop) -->
+    <div class="fixed bottom-8 right-8 z-50">
+        <button class="w-14 h-14 bg-gold rounded-full flex items-center justify-center text-black shadow-[0_0_20px_rgba(197,160,89,0.3)] hover:scale-110 hover:shadow-[0_0_30px_rgba(197,160,89,0.5)] transition-all">
+            <i class="ph-bold ph-plus text-2xl"></i>
+        </button>
+    </div>
+
+    <!-- MAIN GRID -->
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 md:px-8 py-8 md:py-12">
+        
+        <!-- Stats / Header -->
+        <div class="mb-8 flex items-end justify-between border-b border-white/5 pb-4">
+            <div>
+                <h1 class="font-heading text-3xl text-white mb-1">Journal Entries</h1>
+                <p class="font-body text-gray-500 italic">24 Reflections Documented</p>
+            </div>
+            <div class="hidden md:block">
+                <span class="text-xs font-ui text-gold uppercase tracking-widest">Last Entry: 2 Hours Ago</span>
+            </div>
+        </div>
+
+        <!-- The Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- CARD 1 (Latest) -->
+            <article class="journal-card group relative bg-surface border border-border p-6 rounded-lg opacity-0 animate-fade-in-stagger stagger-1 cursor-pointer">
+                <!-- Meta Top -->
+                <div class="flex justify-between items-start mb-4">
+                    <div class="flex flex-col">
+                        <span class="text-[10px] font-ui uppercase tracking-widest text-gold mb-1">Today, 11:11 PM</span>
+                        <div class="flex items-center gap-2 text-gray-600 text-xs">
+                            <i class="ph-fill ph-moon"></i>
+                            <span>Waxing Gibbous</span>
+                        </div>
+                    </div>
+                    <i class="ph ph-lock-key text-gray-600 text-lg" title="Private Entry"></i>
+                </div>
+
+                <!-- Content -->
+                <div class="mb-6">
+                    <h2 class="font-heading text-2xl text-white mb-3 group-hover:text-gold transition-colors">The Weight of Truth</h2>
+                    <p class="font-body text-lg text-gray-400 line-clamp-3 leading-snug">
+                        The Ace of Swords arrived today like a lightning bolt. I realized that my hesitation wasn't about safety, it was about avoiding the necessary conversation...
+                    </p>
+                </div>
+
+                <!-- Footer: Reading Linkage -->
+                <div class="pt-4 border-t border-white/5 flex justify-between items-center">
+                    <!-- Mini Cards -->
+                    <div class="flex items-center gap-1">
+                        <div class="mini-card bg-[url('https://images.unsplash.com/photo-1572925077991-61acf7d70608?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGhlJTIwbW9vbnxlbnwwfHwwfHx8MA%3D%3D')]"></div>
+                        <div class="mini-card bg-[url('https://images.unsplash.com/photo-1753797782494-d7db19adc674?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] border-gold"></div>
+                        <div class="mini-card bg-[url('https://images.unsplash.com/photo-1728241189721-6a46979906fb?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')]"></div>
+                    </div>
+                    
+                    <!-- Mood Tag -->
+                    <span class="px-2 py-1 bg-white/5 rounded text-[10px] font-ui uppercase tracking-wider text-gray-400 group-hover:bg-gold/10 group-hover:text-gold transition-colors">
+                        Clarity
+                    </span>
+                </div>
+            </article>
+
+            <!-- CARD 2 -->
+            <article class="journal-card group relative bg-surface border border-border p-6 rounded-lg opacity-0 animate-fade-in-stagger stagger-2 cursor-pointer">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="flex flex-col">
+                        <span class="text-[10px] font-ui uppercase tracking-widest text-gray-400 mb-1">Oct 21, 2023</span>
+                        <div class="flex items-center gap-2 text-gray-600 text-xs">
+                            <i class="ph-fill ph-cloud-rain"></i>
+                            <span>Stormy</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h2 class="font-heading text-2xl text-white mb-3 group-hover:text-gold transition-colors">Shadow Work</h2>
+                    <p class="font-body text-lg text-gray-400 line-clamp-3 leading-snug">
+                        The Devil card keeps appearing. I'm starting to see the pattern in my habits. It's not about restriction, but about understanding the chains...
+                    </p>
+                </div>
+
+                <div class="pt-4 border-t border-white/5 flex justify-between items-center">
+                    <div class="flex items-center gap-1">
+                        <div class="mini-card bg-[url('https://images.unsplash.com/photo-1573168549150-689140c8033e?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8YXV8ZW58MHx8MHx8fDA%3D&fm=jpg&q=60&w=3000')]"></div>
+                    </div>
+                    <span class="px-2 py-1 bg-white/5 rounded text-[10px] font-ui uppercase tracking-wider text-gray-400 group-hover:bg-white/10 transition-colors">
+                        Anxiety
+                    </span>
+                </div>
+            </article>
+
+            <!-- CARD 3 -->
+            <article class="journal-card group relative bg-surface border border-border p-6 rounded-lg opacity-0 animate-fade-in-stagger stagger-3 cursor-pointer">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="flex flex-col">
+                        <span class="text-[10px] font-ui uppercase tracking-widest text-gray-400 mb-1">Oct 18, 2023</span>
+                        <div class="flex items-center gap-2 text-gray-600 text-xs">
+                            <i class="ph-fill ph-sun"></i>
+                            <span>Clear Skies</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h2 class="font-heading text-2xl text-white mb-3 group-hover:text-gold transition-colors">Morning Ritual</h2>
+                    <p class="font-body text-lg text-gray-400 line-clamp-3 leading-snug">
+                        Just a quick draw before work. The Sun. Finally, some respite. I'm going to carry this energy into the meeting today.
+                    </p>
+                </div>
+
+                <div class="pt-4 border-t border-white/5 flex justify-between items-center">
+                    <div class="flex items-center gap-1">
+                        <div class="mini-card bg-[url('https://images.unsplash.com/photo-1533158388470-9a21644ce794?q=80&w=2670&auto=format&fit=crop')]"></div>
+                    </div>
+                    <span class="px-2 py-1 bg-white/5 rounded text-[10px] font-ui uppercase tracking-wider text-gray-400 group-hover:bg-white/10 transition-colors">
+                        Hope
+                    </span>
+                </div>
+            </article>
+
+            <!-- CARD 4 -->
+            <article class="journal-card group relative bg-surface border border-border p-6 rounded-lg opacity-0 animate-fade-in-stagger stagger-4 cursor-pointer">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="flex flex-col">
+                        <span class="text-[10px] font-ui uppercase tracking-widest text-gray-400 mb-1">Oct 14, 2023</span>
+                        <div class="flex items-center gap-2 text-gray-600 text-xs">
+                            <i class="ph-fill ph-moon-stars"></i>
+                            <span>New Moon</span>
+                        </div>
+                    </div>
+                     <i class="ph ph-lock-key text-gray-600 text-lg" title="Private Entry"></i>
+                </div>
+
+                <div class="mb-6">
+                    <h2 class="font-heading text-2xl text-white mb-3 group-hover:text-gold transition-colors">Letting Go</h2>
+                    <p class="font-body text-lg text-gray-400 line-clamp-3 leading-snug">
+                        Death reversed. Why am I resisting the change? I know it's inevitable. The reading suggests I'm holding onto a ghost...
+                    </p>
+                </div>
+
+                <div class="pt-4 border-t border-white/5 flex justify-between items-center">
+                    <div class="flex items-center gap-1">
+                        <div class="mini-card bg-[url('https://images.unsplash.com/photo-1753797782494-d7db19adc674?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')]"></div>
+                        <div class="mini-card bg-gray-800 border-white/10"></div>
+                        <div class="mini-card bg-gray-800 border-white/10"></div>
+                    </div>
+                    <span class="px-2 py-1 bg-white/5 rounded text-[10px] font-ui uppercase tracking-wider text-gray-400 group-hover:bg-white/10 transition-colors">
+                        Grief
+                    </span>
+                </div>
+            </article>
+
+             <!-- CARD 5 -->
+             <article class="journal-card group relative bg-surface border border-border p-6 rounded-lg opacity-0 animate-fade-in-stagger stagger-5 cursor-pointer">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="flex flex-col">
+                        <span class="text-[10px] font-ui uppercase tracking-widest text-gray-400 mb-1">Oct 10, 2023</span>
+                        <div class="flex items-center gap-2 text-gray-600 text-xs">
+                            <i class="ph-fill ph-wind"></i>
+                            <span>Breezy</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h2 class="font-heading text-2xl text-white mb-3 group-hover:text-gold transition-colors">Career Path</h2>
+                    <p class="font-body text-lg text-gray-400 line-clamp-3 leading-snug">
+                        Three of Pentacles. Collaboration is the key. I need to stop trying to do everything alone and trust the team.
+                    </p>
+                </div>
+
+                <div class="pt-4 border-t border-white/5 flex justify-between items-center">
+                    <div class="flex items-center gap-1">
+                        <div class="mini-card bg-[url('https://images.unsplash.com/photo-1728241189721-6a46979906fb?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')]"></div>
+                    </div>
+                    <span class="px-2 py-1 bg-white/5 rounded text-[10px] font-ui uppercase tracking-wider text-gray-400 group-hover:bg-white/10 transition-colors">
+                        Work
+                    </span>
+                </div>
+            </article>
+
+        </div>
+
+        <!-- LOAD MORE -->
+        <div class="w-full flex justify-center mt-12">
+            <button class="text-xs font-ui uppercase tracking-[0.2em] text-gray-600 hover:text-gold transition-colors border-b border-transparent hover:border-gold pb-1">
+                Load previous entries
+            </button>
+        </div>
+
+    </main>
+
+    <script>
+        // Simple visual interaction for filtering
+        const buttons = document.querySelectorAll('header button');
+        
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Toggle active state visuals
+                btn.classList.toggle('border-gold');
+                btn.classList.toggle('text-gold');
+                const textSpan = btn.querySelector('span');
+                const icon = btn.querySelector('i');
+                
+                if (btn.classList.contains('border-gold')) {
+                    textSpan.classList.remove('text-gray-300');
+                    textSpan.classList.add('text-gold');
+                    icon.classList.remove('text-gray-400');
+                    icon.classList.add('text-gold');
+                } else {
+                    textSpan.classList.add('text-gray-300');
+                    textSpan.classList.remove('text-gold');
+                    icon.classList.add('text-gray-400');
+                    icon.classList.remove('text-gold');
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

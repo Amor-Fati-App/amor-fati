@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amor Fati - Spread Library</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600&family=Pinyon+Script&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#050505',
+                        surface: '#121212',
+                        border: '#2a2a2a',
+                        gold: '#C5A059',
+                        silver: '#a1a1aa',
+                    },
+                    fontFamily: {
+                        heading: ['"Cinzel"', 'serif'],
+                        body: ['"Cormorant Garamond"', 'serif'],
+                        ui: ['"Inter"', 'sans-serif'],
+                        script: ['"Pinyon Script"', 'cursive'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-5px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050505;
+            color: #e5e5e5;
+            overflow-x: hidden;
+        }
+
+        /* Layout Preview Mini-Cards */
+        .preview-slot {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        .spread-card:hover .preview-slot {
+            border-color: rgba(197, 160, 89, 0.4);
+            background-color: rgba(197, 160, 89, 0.1);
+        }
+
+        /* Specific Layout Grids */
+        .layout-3card {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+            width: 60%;
+            aspect-ratio: 2/1;
+        }
+        
+        .layout-cross {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 2px;
+            width: 40px;
+            height: 60px;
+        }
+        /* Celtic Cross approximations for CSS art */
+        .cc-center { grid-area: 2 / 2 / 3 / 3; }
+        .cc-cross { grid-area: 2 / 2 / 3 / 3; transform: rotate(90deg); opacity: 0.5; }
+        .cc-top { grid-area: 1 / 2 / 2 / 3; }
+        .cc-bottom { grid-area: 3 / 2 / 4 / 3; }
+        .cc-left { grid-area: 2 / 1 / 3 / 2; }
+        .cc-right { grid-area: 2 / 3 / 3 / 4; }
+
+        .premium-lock {
+            background: linear-gradient(135deg, rgba(197, 160, 89, 0.2) 0%, rgba(0,0,0,0) 100%);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        
+        /* Category Navigation Active State */
+        .nav-link.active {
+            color: #C5A059;
+            border-bottom-color: #C5A059;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col relative selection:bg-gold selection:text-black">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-void/90 backdrop-blur-lg border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <a href="#" class="font-heading text-xl text-white tracking-widest hover:text-gold transition-colors" rel="nofollow">Amor Fati</a>
+                <span class="h-4 w-px bg-white/10 hidden sm:block"></span>
+                <span class="text-xs font-ui text-gray-500 uppercase tracking-widest hidden sm:block">Spread Library</span>
+            </div>
+
+            <!-- Search -->
+            <div class="relative w-64 md:w-80 group hidden md:block">
+                <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-gold"></i>
+                <input type="text" placeholder="Find a spread..." 
+                       class="w-full bg-[#121212] border border-white/10 rounded-full py-1.5 pl-10 pr-4 text-xs font-ui text-white placeholder-gray-600 focus:outline-none focus:border-gold/50 transition-all">
+            </div>
+
+            <div class="flex items-center gap-4">
+                <button class="text-xs font-ui uppercase font-bold text-gold border border-gold/30 px-4 py-2 rounded-full hover:bg-gold/10 transition-colors">
+                    Access Premium
+                </button>
+            </div>
+        </div>
+
+        <!-- Filter Navigation -->
+        <nav class="max-w-7xl mx-auto px-6 flex items-center gap-8 overflow-x-auto no-scrollbar border-b border-white/5">
+            <button class="nav-link active font-ui text-xs uppercase tracking-widest py-4 border-b-2 border-transparent hover:text-white transition-colors whitespace-nowrap">All Spreads</button>
+            <button class="nav-link font-ui text-xs uppercase tracking-widest py-4 border-b-2 border-transparent text-gray-500 hover:text-white transition-colors whitespace-nowrap">Standard</button>
+            <button class="nav-link font-ui text-xs uppercase tracking-widest py-4 border-b-2 border-transparent text-gray-500 hover:text-white transition-colors whitespace-nowrap">Love & Relationships</button>
+            <button class="nav-link font-ui text-xs uppercase tracking-widest py-4 border-b-2 border-transparent text-gray-500 hover:text-white transition-colors whitespace-nowrap">Career And Wealth</button>
+            <button class="nav-link font-ui text-xs uppercase tracking-widest py-4 border-b-2 border-transparent text-gray-500 hover:text-white transition-colors whitespace-nowrap">Advanced</button>
+            <button class="nav-link font-ui text-xs uppercase tracking-widest py-4 border-b-2 border-transparent text-gray-500 hover:text-white transition-colors whitespace-nowrap flex items-center gap-2">
+                Favorites <i class="ph-fill ph-heart text-gold"></i>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto w-full px-6 py-12">
+
+        <!-- SECTION: FEATURED -->
+        <div class="mb-16 relative rounded-2xl overflow-hidden border border-white/10 group cursor-pointer">
+            <div class="absolute inset-0 bg-gradient-to-r from-void via-void/80 to-transparent z-10"></div>
+            <img src="https://images.unsplash.com/photo-1464802686167-b939a6910659?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29zbWljfGVufDB8fDB8fHww" class="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-1000" alt="Cosmic Background">
+            
+            <div class="relative z-20 p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
+                <div class="max-w-xl">
+                    <span class="inline-block px-3 py-1 mb-4 rounded-full bg-gold/20 border border-gold/30 text-[10px] font-ui font-bold uppercase tracking-widest text-gold">Featured Spread</span>
+                    <h2 class="font-heading text-4xl md:text-5xl text-white mb-4">The Celtic Cross</h2>
+                    <p class="font-body text-xl text-gray-300 leading-relaxed mb-6">The ancient standard for comprehensive insight. Covers the heart of the matter, conflicting influences, past roots, and future outcomes in a detailed 10-card topography.</p>
+                    <button class="px-8 py-3 bg-white text-black font-ui text-xs font-bold uppercase tracking-widest rounded-sm hover:bg-gold transition-colors">Start Reading</button>
+                </div>
+                
+                <!-- Visual representation of Celtic Cross -->
+                <div class="relative w-48 h-64 md:w-64 md:h-80 shrink-0 opacity-80 group-hover:opacity-100 transition-opacity">
+                    <!-- CSS Grid Drawing of Celtic Cross -->
+                     <div class="absolute top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2 grid grid-cols-2 gap-2 w-24 h-32">
+                        <!-- Cross -->
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-16 bg-white/10 border border-white/30 rounded-sm"></div>
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-16 bg-white/10 border border-white/30 rounded-sm rotate-90"></div>
+                        <!-- Circle around -->
+                        <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-10 h-16 bg-white/5 border border-white/20 rounded-sm"></div> <!-- Above -->
+                        <div class="absolute -bottom-10 left-1/2 -translate-x-1/2 w-10 h-16 bg-white/5 border border-white/20 rounded-sm"></div> <!-- Below -->
+                        <div class="absolute top-1/2 -left-10 -translate-y-1/2 w-10 h-16 bg-white/5 border border-white/20 rounded-sm"></div> <!-- Left -->
+                        <div class="absolute top-1/2 -right-10 -translate-y-1/2 w-10 h-16 bg-white/5 border border-white/20 rounded-sm"></div> <!-- Right -->
+                     </div>
+                     <!-- Staff -->
+                     <div class="absolute top-1/2 right-0 -translate-y-1/2 flex flex-col gap-2">
+                        <div class="w-10 h-16 bg-white/5 border border-white/20 rounded-sm"></div>
+                        <div class="w-10 h-16 bg-white/5 border border-white/20 rounded-sm"></div>
+                        <div class="w-10 h-16 bg-white/5 border border-white/20 rounded-sm"></div>
+                        <div class="w-10 h-16 bg-white/5 border border-white/20 rounded-sm"></div>
+                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION: STANDARD (FREE) -->
+        <section class="mb-12">
+            <h3 class="font-heading text-2xl text-white mb-6 border-l-2 border-gold pl-4">Foundation Spreads</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- 1 Card: Daily Draw -->
+                <article class="spread-card group relative bg-surface border border-white/5 p-6 rounded-lg hover:border-white/20 cursor-pointer">
+                    <div class="absolute top-4 right-4 z-10">
+                        <button class="text-gray-600 hover:text-red-500 transition-colors"><i class="ph ph-heart text-xl"></i></button>
+                    </div>
+                    
+                    <!-- Preview -->
+                    <div class="h-32 flex items-center justify-center mb-6 bg-void/50 rounded border border-white/5 group-hover:border-white/10 transition-colors">
+                        <div class="w-12 h-20 preview-slot bg-gradient-to-br from-white/10 to-transparent"></div>
+                    </div>
+
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="px-2 py-0.5 rounded bg-green-900/30 text-green-400 text-[10px] font-ui uppercase font-bold tracking-wider">Free</span>
+                        <span class="text-xs font-ui text-gray-500 uppercase tracking-wide">1 Card</span>
+                    </div>
+
+                    <h4 class="font-heading text-xl text-white mb-2 group-hover:text-gold transition-colors">The Daily Draw</h4>
+                    <p class="font-body text-gray-400 text-lg leading-snug">Quick guidance for the day ahead. One card to set your intention or answer a simple yes/no.</p>
+                </article>
+
+                <!-- 3 Card: Alignment -->
+                <article class="spread-card group relative bg-surface border border-white/5 p-6 rounded-lg hover:border-white/20 cursor-pointer">
+                    <div class="absolute top-4 right-4 z-10">
+                        <button class="text-gray-600 hover:text-red-500 transition-colors"><i class="ph-fill ph-heart text-red-500 text-xl"></i></button>
+                    </div>
+                    
+                    <!-- Preview -->
+                    <div class="h-32 flex items-center justify-center mb-6 bg-void/50 rounded border border-white/5 group-hover:border-white/10 transition-colors">
+                        <div class="flex gap-2">
+                            <div class="w-10 h-16 preview-slot"></div>
+                            <div class="w-10 h-16 preview-slot border-gold/50 bg-gold/5"></div> <!-- Center Focus -->
+                            <div class="w-10 h-16 preview-slot"></div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="px-2 py-0.5 rounded bg-green-900/30 text-green-400 text-[10px] font-ui uppercase font-bold tracking-wider">Free</span>
+                        <span class="text-xs font-ui text-gray-500 uppercase tracking-wide">3 Cards</span>
+                    </div>
+
+                    <h4 class="font-heading text-xl text-white mb-2 group-hover:text-gold transition-colors">Past, Present, Future</h4>
+                    <p class="font-body text-gray-400 text-lg leading-snug">The classic linear spread. Understand the trajectory of events and where you currently stand.</p>
+                </article>
+
+                <!-- 5 Card: The Decision -->
+                <article class="spread-card group relative bg-surface border border-white/5 p-6 rounded-lg hover:border-white/20 cursor-pointer">
+                    <div class="absolute top-4 right-4 z-10">
+                        <button class="text-gray-600 hover:text-red-500 transition-colors"><i class="ph ph-heart text-xl"></i></button>
+                    </div>
+                    
+                    <!-- Preview -->
+                    <div class="h-32 flex items-center justify-center mb-6 bg-void/50 rounded border border-white/5 group-hover:border-white/10 transition-colors">
+                        <div class="flex items-center gap-4">
+                            <div class="flex flex-col gap-1">
+                                <div class="w-8 h-12 preview-slot"></div>
+                                <div class="w-8 h-12 preview-slot"></div>
+                            </div>
+                            <div class="w-10 h-16 preview-slot border-white/30"></div>
+                            <div class="flex flex-col gap-1">
+                                <div class="w-8 h-12 preview-slot"></div>
+                                <div class="w-8 h-12 preview-slot"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="px-2 py-0.5 rounded bg-green-900/30 text-green-400 text-[10px] font-ui uppercase font-bold tracking-wider">Free</span>
+                        <span class="text-xs font-ui text-gray-500 uppercase tracking-wide">5 Cards</span>
+                    </div>
+
+                    <h4 class="font-heading text-xl text-white mb-2 group-hover:text-gold transition-colors">The Crossroads</h4>
+                    <p class="font-body text-gray-400 text-lg leading-snug">Compare two potential paths relative to your current situation. Ideal for difficult choices.</p>
+                </article>
+
+            </div>
+        </section>
+
+
+        <!-- SECTION: PREMIUM / THEMED -->
+        <section class="mb-12">
+            <h3 class="font-heading text-2xl text-white mb-6 border-l-2 border-gold pl-4 flex items-center gap-2">
+                Advanced & Themed 
+                <i class="ph-fill ph-crown text-gold text-lg"></i>
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- Love: The Mirror -->
+                <article class="spread-card group relative bg-[#0a0a0a] border border-gold/20 p-6 rounded-lg hover:border-gold/50 cursor-pointer overflow-hidden premium-lock">
+                    <div class="absolute top-4 right-4 z-10">
+                        <i class="ph-fill ph-lock-key text-gold/70 text-lg"></i>
+                    </div>
+
+                    <!-- Preview -->
+                    <div class="h-32 flex items-center justify-center mb-6 relative">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-10">
+                            <i class="ph-thin ph-heart text-6xl text-gold"></i>
+                        </div>
+                        <div class="flex gap-8">
+                            <div class="flex flex-col gap-1 mt-4">
+                                <div class="w-8 h-12 preview-slot"></div>
+                                <div class="w-8 h-12 preview-slot"></div>
+                            </div>
+                            <div class="flex flex-col gap-1 mt-4">
+                                <div class="w-8 h-12 preview-slot"></div>
+                                <div class="w-8 h-12 preview-slot"></div>
+                            </div>
+                        </div>
+                         <!-- Bridge Card -->
+                         <div class="absolute top-8 w-8 h-12 preview-slot border-gold/40 rotate-90"></div>
+                    </div>
+
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="px-2 py-0.5 rounded bg-gold/20 text-gold text-[10px] font-ui uppercase font-bold tracking-wider">Premium</span>
+                        <span class="text-xs font-ui text-gray-500 uppercase tracking-wide">Relationship</span>
+                    </div>
+
+                    <h4 class="font-heading text-xl text-white mb-2 group-hover:text-gold transition-colors">The Mirror</h4>
+                    <p class="font-body text-gray-400 text-lg leading-snug">Deep dive into a connection. Analysis of you, them, the relationship dynamic, and the outcome.</p>
+                </article>
+
+                <!-- Career: The Ladder -->
+                <article class="spread-card group relative bg-[#0a0a0a] border border-gold/20 p-6 rounded-lg hover:border-gold/50 cursor-pointer overflow-hidden premium-lock">
+                    <div class="absolute top-4 right-4 z-10">
+                         <i class="ph-fill ph-lock-key text-gold/70 text-lg"></i>
+                    </div>
+
+                    <!-- Preview -->
+                    <div class="h-32 flex items-center justify-center mb-6">
+                        <div class="flex flex-col gap-1 items-center">
+                            <div class="w-8 h-12 preview-slot border-gold/40"></div>
+                            <div class="flex gap-1">
+                                <div class="w-8 h-12 preview-slot"></div>
+                                <div class="w-8 h-12 preview-slot"></div>
+                            </div>
+                            <div class="flex gap-1">
+                                <div class="w-8 h-12 preview-slot"></div>
+                                <div class="w-8 h-12 preview-slot"></div>
+                                <div class="w-8 h-12 preview-slot"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="px-2 py-0.5 rounded bg-gold/20 text-gold text-[10px] font-ui uppercase font-bold tracking-wider">Premium</span>
+                        <span class="text-xs font-ui text-gray-500 uppercase tracking-wide">Career</span>
+                    </div>
+
+                    <h4 class="font-heading text-xl text-white mb-2 group-hover:text-gold transition-colors">The Career Ladder</h4>
+                    <p class="font-body text-gray-400 text-lg leading-snug">Assessing current skills, obstacles to promotion, helpful allies, and long-term financial outcome.</p>
+                </article>
+
+                <!-- Self: The Chakra Alignment -->
+                <article class="spread-card group relative bg-[#0a0a0a] border border-gold/20 p-6 rounded-lg hover:border-gold/50 cursor-pointer overflow-hidden premium-lock">
+                    <div class="absolute top-4 right-4 z-10">
+                         <i class="ph-fill ph-lock-key text-gold/70 text-lg"></i>
+                    </div>
+
+                    <!-- Preview -->
+                    <div class="h-32 flex items-center justify-center mb-6">
+                        <div class="flex flex-col gap-0.5">
+                            <div class="w-16 h-2 rounded-full bg-white/5"></div>
+                            <div class="w-8 h-12 preview-slot mx-auto border-gold/40"></div> <!-- Crown -->
+                            <div class="w-8 h-12 preview-slot mx-auto"></div> <!-- Heart -->
+                            <div class="w-8 h-12 preview-slot mx-auto"></div> <!-- Root -->
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="px-2 py-0.5 rounded bg-gold/20 text-gold text-[10px] font-ui uppercase font-bold tracking-wider">Premium</span>
+                        <span class="text-xs font-ui text-gray-500 uppercase tracking-wide">Spiritual</span>
+                    </div>
+
+                    <h4 class="font-heading text-xl text-white mb-2 group-hover:text-gold transition-colors">Chakra Alignment</h4>
+                    <p class="font-body text-gray-400 text-lg leading-snug">A 7-card vertical spread assessing the health of your energy centers and identifying blockages.</p>
+                </article>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Promo -->
+    <footer class="border-t border-white/5 py-12 bg-surface">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h2 class="font-heading text-2xl text-white mb-4">Unlock the Full Grimoire</h2>
+            <p class="font-body text-gray-400 mb-8 max-w-lg mx-auto">Access over 50 specialized spreads, unlimited journal storage, and detailed card comparisons with Amor Fati Premium.</p>
+            <button class="px-8 py-3 bg-gold text-black font-ui text-xs font-bold uppercase tracking-widest rounded-sm hover:bg-white transition-colors">
+                Upgrade Now
+            </button>
+        </div>
+    </footer>
+
+</body>
+</html>

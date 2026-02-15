@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amor Fati | The Revelation</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Pinyon+Script&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#050404',
+                        paper: '#F2F0E9', // Warm parchment white
+                        gold: '#C6A87C',
+                        'gold-light': '#E5D1B0',
+                        crimson: '#4A0E0E',
+                        obsidian: '#121212',
+                        'deep-indigo': '#0F0B1E'
+                    },
+                    fontFamily: {
+                        heading: ['Cinzel', 'serif'],
+                        body: ['Cormorant Garamond', 'serif'],
+                        script: ['Pinyon Script', 'cursive'],
+                        ui: ['Inter', 'sans-serif'],
+                    },
+                    backgroundImage: {
+                        'mystic-gradient': 'radial-gradient(circle at 50% 0%, #1e1b2e 0%, #050404 100%)',
+                        'card-back': 'repeating-linear-gradient(45deg, #0f0b0b 0px, #0f0b0b 10px, #141111 10px, #141111 20px)',
+                        'gold-shimmer': 'linear-gradient(45deg, transparent 40%, rgba(229, 209, 176, 0.3) 50%, transparent 60%)'
+                    },
+                    boxShadow: {
+                        'glow': '0 0 20px rgba(198, 168, 124, 0.15)',
+                        'card-float': '0 20px 40px -10px rgba(0,0,0,0.7)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050404;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #C6A87C;
+        }
+
+        /* 3D Flip Mechanics */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s, box-shadow 0.5s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .card-container:hover .card-inner {
+            box-shadow: 0 0 30px rgba(198, 168, 124, 0.2);
+        }
+
+        /* The JS will toggle this class */
+        .is-flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(198, 168, 124, 0.3);
+        }
+
+        .card-front {
+            background-color: #050404;
+        }
+
+        .card-back {
+            background-color: #F2F0E9; /* Light parchment for reading */
+            color: #121212;
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+        }
+
+        /* Staggered Entrance */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-enter {
+            animation: fadeUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            opacity: 0;
+        }
+
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        .delay-500 { animation-delay: 500ms; }
+
+        /* Typography Tweaks */
+        .text-justified-reading {
+            text-align: justify;
+            text-justify: inter-word;
+        }
+        
+        /* Grain Overlay */
+        .grain-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            z-index: 50;
+        }
+    </style>
+</head>
+<body class="bg-void text-gray-300 min-h-screen font-body selection:bg-gold selection:text-black overflow-x-hidden">
+
+    <!-- Grain Texture -->
+    <div class="grain-overlay"></div>
+
+    <!-- Background Ambience -->
+    <div class="fixed inset-0 bg-mystic-gradient -z-10"></div>
+    <div class="fixed top-0 left-0 w-full h-[500px] bg-gradient-to-b from-purple-900/10 to-transparent pointer-events-none"></div>
+
+    <!-- Navigation (Minimal) -->
+    <nav class="fixed top-0 w-full z-40 px-8 py-6 flex justify-between items-center mix-blend-difference">
+        <div class="flex items-center gap-4">
+            <button class="text-white/60 hover:text-white transition-colors">
+                <i class="ph ph-arrow-left text-xl"></i>
+            </button>
+            <span class="font-heading text-sm tracking-[0.2em] text-gold/80 uppercase">The Reading</span>
+        </div>
+        <div class="absolute left-1/2 -translate-x-1/2 text-center">
+            <h1 class="font-script text-3xl text-gold">Amor Fati</h1>
+        </div>
+        <div>
+            <button class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-white/5 transition-all">
+                <i class="ph ph-user text-white/80"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="relative z-10 pt-32 pb-20 px-4 md:px-12 max-w-7xl mx-auto min-h-screen flex flex-col">
+        
+        <!-- Header Section -->
+        <header class="text-center mb-16 animate-enter">
+            <p class="font-heading text-xs uppercase tracking-[0.3em] text-white/40 mb-3">Archetypes Aligned</p>
+            <h2 class="font-body text-4xl md:text-5xl lg:text-6xl text-white font-light mb-4">
+                The <span class="text-gold italic font-script pr-2">Narrative</span> of Fate
+            </h2>
+            <p class="text-white/60 max-w-lg mx-auto text-lg leading-relaxed">
+                The cards have fallen. The universe speaks in symbols, not absolutes. Tap each card to unveil the wisdom held within its position.
+            </p>
+        </header>
+
+        <!-- Tarot Spread Layout (3 Cards) -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 mb-20">
+            
+            <!-- Card 1: The Past / Foundation -->
+            <div class="perspective-1000 h-[500px] animate-enter delay-100 card-container" onclick="flipCard(this)">
+                <div class="card-inner w-full h-full relative shadow-card-float">
+                    <!-- Front Image -->
+                    <div class="card-front">
+                        <img src="https://images.unsplash.com/photo-1633511090164-b43840ea1607?q=80&w=800&auto=format&fit=crop" 
+                             alt="The Moon Tarot Card" 
+                             class="w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity duration-500">
+                        <!-- Label Overlay -->
+                        <div class="absolute bottom-0 w-full p-6 bg-gradient-to-t from-black to-transparent pt-20 text-left">
+                            <span class="block text-gold text-xs uppercase tracking-widest font-heading mb-1">Position I</span>
+                            <h3 class="text-white font-heading text-xl">The Moon</h3>
+                            <p class="text-white/60 text-sm font-ui mt-1">Reflections of the Unseen</p>
+                        </div>
+                    </div>
+
+                    <!-- Back Text -->
+                    <div class="card-back border-t-4 border-t-gold">
+                        <div class="absolute top-4 right-4 opacity-20">
+                            <i class="ph ph-moon-stars text-4xl"></i>
+                        </div>
+                        <h4 class="font-heading text-lg text-obsidian tracking-widest uppercase mb-1">The Foundation</h4>
+                        <div class="w-12 h-[1px] bg-gold mb-6"></div>
+                        
+                        <p class="text-obsidian/80 font-body text-xl leading-relaxed italic mb-4">
+                            "Illusions dance where light meets shadow."
+                        </p>
+                        <p class="text-gray-600 font-ui text-sm leading-7 text-justified-reading">
+                            You stand on ground woven from dreams and subtle anxieties. The Moon suggests that your current situation is rooted in a misunderstanding of your own intuition—or perhaps a fear of what lies in the dark. Clarity has yet to arrive; you are navigating by feeling alone.
+                        </p>
+                        <div class="mt-auto pt-6 w-full flex justify-between items-center border-t border-black/10">
+                            <span class="text-xs uppercase tracking-wider text-gray-500">Major Arcana</span>
+                            <span class="text-xs font-bold text-gray-800">XVIII</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: The Present / The Conflict -->
+            <div class="perspective-1000 h-[500px] animate-enter delay-200 card-container -mt-0 md:-mt-8" onclick="flipCard(this)">
+                <div class="card-inner w-full h-full relative shadow-card-float">
+                    <div class="card-front">
+                        <img src="https://images.unsplash.com/photo-1572916298539-75618451737e?q=80&w=800&auto=format&fit=crop" 
+                             alt="Ace of Cups Tarot Card" 
+                             class="w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity duration-500">
+                        <div class="absolute bottom-0 w-full p-6 bg-gradient-to-t from-black to-transparent pt-20 text-left">
+                            <span class="block text-gold text-xs uppercase tracking-widest font-heading mb-1">Position II</span>
+                            <h3 class="text-white font-heading text-xl">Ace of Cups</h3>
+                            <p class="text-white/60 text-sm font-ui mt-1">The Wellspring</p>
+                        </div>
+                    </div>
+                    <div class="card-back border-t-4 border-t-gold">
+                        <div class="absolute top-4 right-4 opacity-20">
+                            <i class="ph ph-drop text-4xl"></i>
+                        </div>
+                        <h4 class="font-heading text-lg text-obsidian tracking-widest uppercase mb-1">The Catalyst</h4>
+                        <div class="w-12 h-[1px] bg-gold mb-6"></div>
+                        
+                        <p class="text-obsidian/80 font-body text-xl leading-relaxed italic mb-4">
+                            "The heart overflows before the mind understands."
+                        </p>
+                        <p class="text-gray-600 font-ui text-sm leading-7 text-justified-reading">
+                            In the immediate present, an emotional breakthrough pierces the fog. The Ace is a raw, potent offering of spirit or love. It suggests that despite the confusion of the past (The Moon), a new emotional clarity is surging forward—demanding to be felt, not analyzed.
+                        </p>
+                        <div class="mt-auto pt-6 w-full flex justify-between items-center border-t border-black/10">
+                            <span class="text-xs uppercase tracking-wider text-gray-500">Minor Arcana</span>
+                            <span class="text-xs font-bold text-gray-800">Water</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: The Future / Outcome -->
+            <div class="perspective-1000 h-[500px] animate-enter delay-300 card-container" onclick="flipCard(this)">
+                <div class="card-inner w-full h-full relative shadow-card-float">
+                    <div class="card-front">
+                        <img src="https://images.unsplash.com/photo-1534068590799-09895a701e3e?q=80&w=800&auto=format&fit=crop" 
+                             alt="The High Priestess Tarot Card" 
+                             class="w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity duration-500">
+                        <div class="absolute bottom-0 w-full p-6 bg-gradient-to-t from-black to-transparent pt-20 text-left">
+                            <span class="block text-gold text-xs uppercase tracking-widest font-heading mb-1">Position III</span>
+                            <h3 class="text-white font-heading text-xl">The High Priestess</h3>
+                            <p class="text-white/60 text-sm font-ui mt-1">The Silent Knower</p>
+                        </div>
+                    </div>
+                    <div class="card-back border-t-4 border-t-gold">
+                        <div class="absolute top-4 right-4 opacity-20">
+                            <i class="ph ph-scroll text-4xl"></i>
+                        </div>
+                        <h4 class="font-heading text-lg text-obsidian tracking-widest uppercase mb-1">The Horizon</h4>
+                        <div class="w-12 h-[1px] bg-gold mb-6"></div>
+                        
+                        <p class="text-obsidian/80 font-body text-xl leading-relaxed italic mb-4">
+                            "Silence is the only answer that does not lie."
+                        </p>
+                        <p class="text-gray-600 font-ui text-sm leading-7 text-justified-reading">
+                            The destination is not action, but understanding. You are moving towards a state of profound intuition. The external noise will fade, replaced by an internal certainty. Do not force the outcome; simply inhabit your own truth. It is waiting for you.
+                        </p>
+                        <div class="mt-auto pt-6 w-full flex justify-between items-center border-t border-black/10">
+                            <span class="text-xs uppercase tracking-wider text-gray-500">Major Arcana</span>
+                            <span class="text-xs font-bold text-gray-800">II</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </section>
+
+        <!-- The Synthesis (Overall Interpretation) -->
+        <section class="max-w-4xl mx-auto w-full animate-enter delay-500">
+            <div class="relative group">
+                <!-- Glowing border effect -->
+                <div class="absolute -inset-1 bg-gradient-to-r from-gold/20 via-white/10 to-gold/20 rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+                
+                <div class="relative bg-[#0A0A0A] border border-white/10 rounded-xl p-8 md:p-12 overflow-hidden">
+                    <!-- Decorative Background element -->
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-gold/5 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2"></div>
+
+                    <div class="flex flex-col md:flex-row gap-8 items-start">
+                        <div class="md:w-1/3">
+                            <h3 class="font-heading text-2xl text-white mb-2">The Synthesis</h3>
+                            <div class="h-1 w-12 bg-gold mb-6"></div>
+                            <p class="text-white/50 text-sm font-ui mb-6">
+                                A holistic view of the forces at play. This summary weaves the threads of individual cards into a cohesive tapestry.
+                            </p>
+                            <div class="flex gap-2">
+                                <span class="px-3 py-1 bg-white/5 rounded-full text-xs text-gold border border-gold/20">Emotional Clarity</span>
+                                <span class="px-3 py-1 bg-white/5 rounded-full text-xs text-gold border border-gold/20">Intuition</span>
+                            </div>
+                        </div>
+
+                        <div class="md:w-2/3 border-l border-white/10 pl-0 md:pl-8 pt-8 md:pt-0">
+                            <p class="font-body text-2xl leading-relaxed text-gray-200 mb-6 antialiased">
+                                <span class="text-gold text-4xl float-left mr-2 mt-[-10px] font-heading">"</span>
+                                Your journey begins in the shadows of doubt, yet the cards reveal that this darkness is merely the soil for a profound emotional awakening. The transition from <span class="text-white italic">The Moon</span> to the <span class="text-white italic">Ace of Cups</span> suggests that your confusion is about to break like a fever, leaving you with a purified heart.
+                            </p>
+                            <p class="font-body text-xl leading-relaxed text-gray-400">
+                                Ultimately, <span class="text-white italic">The High Priestess</span> assures you that you already possess the answers you seek. Stop looking for external validation. The magic you require is already in your hands; you simply need the quietude to recognize it.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Action Bar -->
+        <footer class="mt-20 flex flex-col md:flex-row justify-center items-center gap-6 animate-enter delay-500 pb-12">
+            <button class="group relative px-8 py-3 bg-transparent overflow-hidden rounded-full border border-gold/30 text-gold hover:text-void hover:bg-gold transition-all duration-300">
+                <span class="relative z-10 flex items-center gap-2 font-heading text-sm font-bold tracking-widest uppercase">
+                    <i class="ph ph-pen-nib"></i> Chronicle This
+                </span>
+            </button>
+            
+            <button class="group relative px-8 py-3 bg-white/5 hover:bg-white/10 overflow-hidden rounded-full border border-white/10 text-white transition-all duration-300">
+                <span class="relative z-10 flex items-center gap-2 font-heading text-sm font-bold tracking-widest uppercase">
+                    Return to Center
+                </span>
+            </button>
+        </footer>
+
+    </main>
+
+    <script>
+        function flipCard(element) {
+            // Toggle the 'is-flipped' class on click
+            element.classList.toggle('is-flipped');
+        }
+    </script>
+</body>
+</html>

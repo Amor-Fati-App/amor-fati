@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amor Fati - Initiate Reading</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Montserrat:wght@400;500;600;700&family=Pinyon+Script&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#050505',
+                        panel: '#0a0a0a',
+                        surface: '#121212',
+                        gold: '#d4af37',
+                        ivory: '#f2e8e3',
+                        subtle: '#a1a1aa'
+                    },
+                    fontFamily: {
+                        display: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Montserrat"', 'sans-serif'],
+                        script: ['"Pinyon Script"', 'cursive'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'slide-up': 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050505;
+            color: #f2e8e3;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* --- SELECTION CARDS --- */
+        .select-card {
+            background: #121212;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .select-card:hover {
+            border-color: rgba(212, 175, 55, 0.6);
+            transform: translateY(-2px);
+            background: #18191c;
+        }
+        .select-card.active {
+            border-color: #d4af37;
+            background: rgba(212, 175, 55, 0.05);
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+        .select-card.active::before {
+            content: '';
+            position: absolute;
+            top: 10px; right: 10px;
+            width: 8px; height: 8px;
+            background: #d4af37;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #d4af37;
+        }
+
+        /* --- INPUT STYLING --- */
+        .ritual-input {
+            background: transparent;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            color: white;
+            transition: border-color 0.3s ease;
+        }
+        .ritual-input:focus {
+            outline: none;
+            border-color: #d4af37;
+        }
+        .ritual-input::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+            font-style: italic;
+        }
+
+        /* --- STAGGERED ANIMATION --- */
+        .step-panel {
+            display: none;
+        }
+        .step-panel.active {
+            display: block;
+            animation: slideUp 0.6s forwards;
+        }
+
+        /* Custom Scrollbar for Tag List */
+        .tag-scroll::-webkit-scrollbar {
+            height: 4px;
+        }
+        .tag-scroll::-webkit-scrollbar-track { background: transparent; }
+        .tag-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+
+        /* Custom Cursor */
+        .cursor-dot {
+            width: 6px; height: 6px; background-color: #d4af37;
+            position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+            border-radius: 50%; pointer-events: none; z-index: 9999;
+            box-shadow: 0 0 10px #d4af37;
+        }
+        .cursor-outline {
+            width: 40px; height: 40px; border: 1px solid rgba(212, 175, 55, 0.5);
+            position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+            border-radius: 50%; pointer-events: none; z-index: 9999;
+            transition: width 0.3s, height 0.3s, background-color 0.3s;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen selection:bg-gold selection:text-black font-sans bg-void">
+
+    <!-- Cursor -->
+    <div class="cursor-dot hidden md:block"></div>
+    <div class="cursor-outline hidden md:block"></div>
+
+    <!-- Background texture -->
+    <div class="fixed inset-0 z-0 pointer-events-none">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_#1f0a0a_0%,_transparent_50%)] opacity-40"></div>
+        <img src="https://images.unsplash.com/photo-1521459467264-802e2ef3141f?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGV4dHVyZXxlbnwwfHwwfHx8MA%3D%3D" class="w-full h-full object-cover opacity-5 mix-blend-screen" alt="Texture">
+    </div>
+
+    <!-- Top Navigation (Exit) -->
+    <nav class="fixed top-0 w-full z-50 px-6 py-6 flex justify-between items-center">
+        <a href="#" class="text-white/40 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest flex items-center gap-2 group" rel="nofollow">
+            <i class="ph ph-x text-lg group-hover:rotate-90 transition-transform"></i> Abort Ritual
+        </a>
+        <div class="flex items-center gap-2">
+            <span class="text-gold font-display italic text-lg opacity-80" id="step-indicator">Step 1 of 4</span>
+        </div>
+    </nav>
+
+    <!-- Main Wizard Container -->
+    <main class="relative z-10 flex-1 flex flex-col items-center justify-center p-4 md:p-8 w-full max-w-5xl mx-auto pt-24">
+        
+        <!-- STEP 1: CHOOSE VESSEL (DECK) -->
+        <section id="step-1" class="step-panel active w-full">
+            <div class="text-center mb-12">
+                <span class="font-sans text-[10px] uppercase tracking-[0.4em] text-gold font-bold mb-2 block animate-fade-in">Step I</span>
+                <h1 class="font-display text-5xl md:text-6xl text-white mb-4 animate-fade-in delay-100">Choose Your Vessel</h1>
+                <p class="font-sans text-sm text-ivory/60 max-w-lg mx-auto animate-fade-in delay-200">
+                    The deck is the lens through which the Oracle speaks. Select the imagery that resonates with your current vibration.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in delay-300">
+                <!-- Deck 1 -->
+                <button class="select-card group h-80 rounded-sm text-left flex flex-col justify-end p-6 active" onclick="selectOption(this, 'deck')">
+                    <img src="https://images.unsplash.com/photo-1691629339142-fa6512188069?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity grayscale group-hover:grayscale-0" alt="Rider Waite">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                    <div class="relative z-10">
+                        <h3 class="font-display text-2xl text-white mb-1">Rider-Waite Smith</h3>
+                        <p class="font-sans text-[10px] uppercase tracking-widest text-gold opacity-80">The Classic Archetype</p>
+                    </div>
+                </button>
+
+                <!-- Deck 2 -->
+                <button class="select-card group h-80 rounded-sm text-left flex flex-col justify-end p-6" onclick="selectOption(this, 'deck')">
+                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YWJzdHJhY3R8ZW58MHx8MHx8fDA%3D" class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity grayscale group-hover:grayscale-0" alt="Abstract">
+                     <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                    <div class="relative z-10">
+                        <h3 class="font-display text-2xl text-white mb-1">Ethereal Void</h3>
+                        <p class="font-sans text-[10px] uppercase tracking-widest text-gold opacity-80">Abstract & Intutive</p>
+                    </div>
+                </button>
+
+                <!-- Deck 3 -->
+                <button class="select-card group h-80 rounded-sm text-left flex flex-col justify-end p-6" onclick="selectOption(this, 'deck')">
+                    <img src="https://images.unsplash.com/photo-1505506874110-6a7a69069a08?q=80&w=600&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity grayscale group-hover:grayscale-0" alt="Marseilles">
+                     <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                    <div class="relative z-10">
+                        <h3 class="font-display text-2xl text-white mb-1">Tarot de Marseille</h3>
+                        <p class="font-sans text-[10px] uppercase tracking-widest text-gold opacity-80">Historical & Geometric</p>
+                    </div>
+                </button>
+            </div>
+        </section>
+
+        <!-- STEP 2: PATTERN (SPREAD) -->
+        <section id="step-2" class="step-panel w-full">
+            <div class="text-center mb-12">
+                <span class="font-sans text-[10px] uppercase tracking-[0.4em] text-gold font-bold mb-2">Step II</span>
+                <h1 class="font-display text-5xl md:text-6xl text-white mb-4">Define The Pattern</h1>
+                <p class="font-sans text-sm text-ivory/60 max-w-lg mx-auto">
+                    Geometry structures the message. Will you seek a single spark or a complex narrative?
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Option 1: Single Card -->
+                <button class="select-card p-6 rounded-sm text-center flex flex-col items-center gap-4 hover:bg-[#1a1a1a]" onclick="selectOption(this, 'spread')">
+                    <div class="w-12 h-16 border border-white/20 rounded-sm bg-white/5"></div>
+                    <div>
+                        <h3 class="font-display text-xl text-white">The Spark</h3>
+                        <p class="text-[10px] text-white/50 uppercase tracking-widest mt-1">1 Card • Daily Focus</p>
+                    </div>
+                </button>
+
+                <!-- Option 2: Three Card -->
+                <button class="select-card p-6 rounded-sm text-center flex flex-col items-center gap-4 hover:bg-[#1a1a1a]" onclick="selectOption(this, 'spread')">
+                    <div class="flex gap-1">
+                        <div class="w-8 h-12 border border-white/20 rounded-sm bg-white/5"></div>
+                        <div class="w-8 h-12 border border-gold/40 rounded-sm bg-gold/10 transform -translate-y-2"></div>
+                        <div class="w-8 h-12 border border-white/20 rounded-sm bg-white/5"></div>
+                    </div>
+                    <div>
+                        <h3 class="font-display text-xl text-white">The Trinity</h3>
+                        <p class="text-[10px] text-white/50 uppercase tracking-widest mt-1">3 Cards • Past/Present/Future</p>
+                    </div>
+                </button>
+
+                 <!-- Option 3: Clarity -->
+                <button class="select-card p-6 rounded-sm text-center flex flex-col items-center gap-4 hover:bg-[#1a1a1a]" onclick="selectOption(this, 'spread')">
+                    <div class="grid grid-cols-2 gap-1 w-16">
+                        <div class="h-10 border border-white/20 rounded-sm bg-white/5"></div>
+                        <div class="h-10 border border-white/20 rounded-sm bg-white/5"></div>
+                        <div class="h-10 border border-white/20 rounded-sm bg-white/5"></div>
+                        <div class="h-10 border border-white/20 rounded-sm bg-white/5"></div>
+                    </div>
+                    <div>
+                        <h3 class="font-display text-xl text-white">Clarity</h3>
+                        <p class="text-[10px] text-white/50 uppercase tracking-widest mt-1">4 Cards • Situation/Advice</p>
+                    </div>
+                </button>
+
+                <!-- Option 4: Celtic Cross -->
+                <button class="select-card p-6 rounded-sm text-center flex flex-col items-center gap-4 hover:bg-[#1a1a1a]" onclick="selectOption(this, 'spread')">
+                    <div class="relative w-16 h-16 flex items-center justify-center">
+                        <div class="absolute w-6 h-10 border border-white/20 bg-white/5 rotate-90"></div>
+                        <div class="absolute w-6 h-10 border border-white/20 bg-white/5"></div>
+                    </div>
+                    <div>
+                        <h3 class="font-display text-xl text-white">Celtic Cross</h3>
+                        <p class="text-[10px] text-white/50 uppercase tracking-widest mt-1">10 Cards • Deep Dive</p>
+                    </div>
+                </button>
+            </div>
+        </section>
+
+        <!-- STEP 3: INTENTION (QUERY) -->
+        <section id="step-3" class="step-panel w-full max-w-2xl">
+            <div class="text-center mb-12">
+                <span class="font-sans text-[10px] uppercase tracking-[0.4em] text-gold font-bold mb-2">Step III</span>
+                <h1 class="font-display text-5xl md:text-6xl text-white mb-4">State Your Intent</h1>
+                <p class="font-sans text-sm text-ivory/60 max-w-lg mx-auto">
+                    The Oracle responds to the clarity of the question. Be specific, or simply ask for "Guidance."
+                </p>
+            </div>
+
+            <div class="relative mb-12">
+                <input type="text" class="w-full ritual-input pb-2 text-center" placeholder="What does the silence whisper?" autofocus>
+            </div>
+
+            <div class="flex flex-wrap gap-3 justify-center tag-scroll">
+                <span class="font-sans text-[10px] text-gold uppercase tracking-widest mr-2 py-2">Suggested Tags:</span>
+                <button onclick="toggleTag(this)" class="px-4 py-1 border border-white/20 rounded-full text-xs text-white/60 hover:border-gold hover:text-white transition-all">#Love</button>
+                <button onclick="toggleTag(this)" class="px-4 py-1 border border-white/20 rounded-full text-xs text-white/60 hover:border-gold hover:text-white transition-all">#Career</button>
+                <button onclick="toggleTag(this)" class="px-4 py-1 border border-white/20 rounded-full text-xs text-white/60 hover:border-gold hover:text-white transition-all">#ShadowWork</button>
+                <button onclick="toggleTag(this)" class="px-4 py-1 border border-white/20 rounded-full text-xs text-white/60 hover:border-gold hover:text-white transition-all">#Dream</button>
+                <button onclick="toggleTag(this)" class="px-4 py-1 border border-white/20 rounded-full text-xs text-white/60 hover:border-gold hover:text-white transition-all">#General</button>
+            </div>
+        </section>
+
+        <!-- STEP 4: PRIVACY (THE SEAL) -->
+        <section id="step-4" class="step-panel w-full max-w-2xl">
+            <div class="text-center mb-12">
+                <span class="font-sans text-[10px] uppercase tracking-[0.4em] text-gold font-bold mb-2">Step IV</span>
+                <h1 class="font-display text-5xl md:text-6xl text-white mb-4">Seal The Ritual</h1>
+                <p class="font-sans text-sm text-ivory/60 max-w-lg mx-auto">
+                    Shall this reading be inscribed in the public archives of the Coven, or sealed in your private grimoire?
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                <button class="select-card p-8 rounded-sm text-center flex flex-col items-center gap-4 hover:bg-[#1a1a1a] active" onclick="selectOption(this, 'privacy')">
+                    <i class="ph-thin ph-lock-key text-5xl text-gold mb-2"></i>
+                    <div>
+                        <h3 class="font-display text-2xl text-white">Grimoire Only</h3>
+                        <p class="text-xs text-white/50 mt-2 font-sans">Private • Encrypted • Personal</p>
+                    </div>
+                </button>
+
+                <button class="select-card p-8 rounded-sm text-center flex flex-col items-center gap-4 hover:bg-[#1a1a1a]" onclick="selectOption(this, 'privacy')">
+                    <i class="ph-thin ph-users-three text-5xl text-white/40 mb-2"></i>
+                    <div>
+                        <h3 class="font-display text-2xl text-white">Share with Coven</h3>
+                        <p class="text-xs text-white/50 mt-2 font-sans">Anonymous • Community Wisdom</p>
+                    </div>
+                </button>
+            </div>
+
+            <!-- FINAL CTA -->
+            <div class="flex justify-center">
+                <button onclick="completeRitual()" class="relative group px-12 py-6 bg-gold overflow-hidden rounded-sm transition-all duration-300 hover:scale-105 shadow-[0_0_30px_rgba(212,175,55,0.3)]">
+                    <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity"></div>
+                    <span class="font-sans text-sm font-bold uppercase tracking-[0.3em] text-black group-hover:text-black flex items-center gap-3">
+                        <i class="ph-bold ph-star-four"></i> Begin Ritual
+                    </span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Navigation Controls (Bottom) -->
+        <div class="fixed bottom-0 w-full p-8 flex justify-between items-center max-w-5xl pointer-events-none">
+            <button id="btn-back" class="pointer-events-auto px-6 py-2 rounded-full border border-white/10 text-white/40 font-sans text-xs uppercase tracking-widest hover:border-white/40 hover:text-white transition-all opacity-0">
+                Back
+            </button>
+            
+            <button id="btn-next" onclick="nextStep()" class="pointer-events-auto px-10 py-3 bg-[#111] border border-white/20 text-white font-sans text-xs font-bold uppercase tracking-widest hover:bg-gold hover:text-black hover:border-gold transition-all shadow-lg">
+                Proceed
+            </button>
+        </div>
+
+    </main>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 4;
+        const btnNext = document.getElementById('btn-next');
+        const btnBack = document.getElementById('btn-back');
+        const stepInd = document.getElementById('step-indicator');
+
+        function updateUI() {
+            // Update Step Panels
+            document.querySelectorAll('.step-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            document.getElementById(`step-${currentStep}`).classList.add('active');
+
+            // Update Indicator
+            stepInd.innerText = `Step ${currentStep} of ${totalSteps}`;
+
+            // Handle Buttons
+            if(currentStep === 1) {
+                btnBack.classList.add('opacity-0');
+            } else {
+                btnBack.classList.remove('opacity-0');
+                btnBack.onclick = prevStep;
+            }
+
+            if(currentStep === 4) {
+                btnNext.style.display = 'none'; // Hide next on final step, use specific CTA
+            } else {
+                btnNext.style.display = 'block';
+                btnNext.innerText = "Proceed";
+            }
+        }
+
+        function nextStep() {
+            if(currentStep < totalSteps) {
+                currentStep++;
+                updateUI();
+            }
+        }
+
+        function prevStep() {
+            if(currentStep > 1) {
+                currentStep--;
+                updateUI();
+            }
+        }
+
+        function selectOption(el, group) {
+            // Remove active from siblings
+            const parent = el.parentElement;
+            const siblings = parent.querySelectorAll('.select-card');
+            siblings.forEach(sib => sib.classList.remove('active'));
+            
+            // Add active to selected
+            el.classList.add('active');
+        }
+
+        function toggleTag(el) {
+            el.classList.toggle('bg-gold');
+            el.classList.toggle('text-black');
+            el.classList.toggle('border-gold');
+            el.classList.toggle('text-white/60');
+            el.classList.toggle('border-white/20');
+        }
+
+        function completeRitual() {
+            const main = document.querySelector('main');
+            main.style.transition = 'all 1s ease';
+            main.style.opacity = '0';
+            main.style.transform = 'scale(0.95)';
+            
+            setTimeout(() => {
+                alert("The cards are being shuffled...");
+                // location.href = '/reading-active';
+            }, 1000);
+        }
+
+        // Custom Cursor Logic
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+
+        window.addEventListener('mousemove', (e) => {
+            cursorDot.style.left = `${e.clientX}px`;
+            cursorDot.style.top = `${e.clientY}px`;
+            
+            cursorOutline.animate({
+                left: `${e.clientX}px`,
+                top: `${e.clientY}px`
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        document.querySelectorAll('button, .select-card, input').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorOutline.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                cursorOutline.style.backgroundColor = 'rgba(212, 175, 55, 0.1)';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursorOutline.style.transform = 'translate(-50%, -50%) scale(1)';
+                cursorOutline.style.backgroundColor = 'transparent';
+            });
+        });
+    </script>
+</body>
+</html>

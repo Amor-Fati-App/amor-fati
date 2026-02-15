@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amor Fati - The Reading</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Pinyon+Script&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#050404',
+                        altar: '#0F0F0F',
+                        gold: '#D4AF37',
+                        goldDim: '#8A7025',
+                        parchment: '#EAE0D5',
+                        mist: '#A3A3A3'
+                    },
+                    fontFamily: {
+                        heading: ['"Cinzel"', 'serif'],
+                        body: ['"Cormorant Garamond"', 'serif'],
+                        script: ['"Pinyon Script"', 'cursive'],
+                        ui: ['"Inter"', 'sans-serif'],
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    },
+                    animation: {
+                        'fade-up': 'fadeUp 0.8s ease-out forwards',
+                        'shimmer': 'shimmer 2s infinite linear',
+                    },
+                    keyframes: {
+                        fadeUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-1000px 0' },
+                            '100%': { backgroundPosition: '1000px 0' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050404;
+            color: #E2E2E2;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0F0F0F; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333; 
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D4AF37; 
+        }
+
+        /* 3D Flip Mechanics */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .card-flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .card-front {
+            background-color: #1a1a1a;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            transition: border-color 0.3s ease;
+        }
+        
+        .card-inner:hover .card-front {
+            border-color: rgba(212, 175, 55, 0.6);
+            transform: translateY(-5px); /* Gentle float hint */
+        }
+
+        .card-back {
+            background-color: #111111; /* Dark solid BG for readability */
+            transform: rotateY(180deg);
+            border: 1px solid #D4AF37;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+            z-index: 2; /* Ensure text is crisp */
+        }
+
+        /* Ambient Glow Behind Cards */
+        .card-glow {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%; height: 80%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Text Utilities */
+        .text-shadow-gold {
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col relative bg-void selection:bg-gold selection:text-black">
+
+    <!-- Navigation / Header -->
+    <header class="w-full p-6 md:p-8 flex justify-between items-end border-b border-white/5 bg-void/80 backdrop-blur-sm sticky top-0 z-50">
+        <div>
+            <h1 class="font-heading text-2xl md:text-3xl text-gold tracking-widest">Amor Fati</h1>
+            <p class="font-body text-mist text-lg italic">The Celtic Cross • Revealed</p>
+        </div>
+        <div class="flex items-center gap-6">
+            <span class="hidden md:inline font-ui text-xs tracking-[0.2em] text-gold/60 uppercase">Oct 26, 2023</span>
+            <button class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-gold hover:text-black hover:border-gold transition-all duration-300">
+                <i class="ph ph-x text-lg"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-grow flex flex-col items-center justify-start py-12 px-4 md:px-8 max-w-7xl mx-auto w-full gap-16">
+
+        <!-- SECTION 1: THE CARDS -->
+        <section class="w-full flex flex-col items-center gap-8">
+            <div class="text-center space-y-2 opacity-80">
+                <h2 class="font-script text-3xl text-gold/80">The Spread</h2>
+                <p class="font-ui text-xs uppercase tracking-[0.2em] text-white/40">Tap a card to reveal its truth</p>
+            </div>
+
+            <!-- Card Grid -->
+            <!-- Using grid with 3 columns for desktop, 1 for mobile. Cards maintain aspect ratio. -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl h-[500px] md:h-[450px]">
+                
+                <!-- POSITION 1: PAST -->
+                <div class="perspective-1000 w-full h-full group" onclick="this.classList.toggle('card-flipped')">
+                    <div class="card-inner w-full h-full relative duration-700">
+                        
+                        <!-- Front -->
+                        <div class="card-face card-front relative">
+                            <img src="https://images.unsplash.com/photo-1728852575736-d76338d15b76?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aGVybWl0fGVufDB8fDB8fHww" 
+                                 alt="The Hermit" class="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 transition-all duration-700">
+                            <!-- Overlay Gradient -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+                            
+                            <!-- Position Label -->
+                            <div class="absolute top-4 left-0 w-full text-center">
+                                <span class="font-ui text-[10px] tracking-widest uppercase text-gold/80 border px-2 py-1 border-gold/30 rounded-full bg-black/50 backdrop-blur-md">I. The Past</span>
+                            </div>
+
+                            <!-- Card Name (Front) -->
+                            <div class="absolute bottom-6 left-0 w-full text-center px-4">
+                                <h3 class="font-heading text-xl text-white tracking-wide">The Hermit</h3>
+                            </div>
+                        </div>
+
+                        <!-- Back (Interpretation) -->
+                        <div class="card-back border-t-4 border-t-gold">
+                            <div class="absolute top-4 right-4 text-gold/30 text-4xl font-heading opacity-20">IX</div>
+                            
+                            <h4 class="font-ui text-[10px] uppercase tracking-[0.25em] text-gold mb-2">Position: The Past</h4>
+                            <h3 class="font-heading text-2xl text-white mb-4">The Hermit</h3>
+                            
+                            <div class="w-12 h-px bg-gradient-to-r from-transparent via-gold to-transparent mb-6"></div>
+                            
+                            <p class="font-body text-lg md:text-xl text-gray-200 leading-snug mb-6">
+                                You have walked a lonely path recently. This wasn't isolation for its own sake, but a necessary withdrawal to find your inner light.
+                            </p>
+                            
+                            <ul class="flex flex-wrap justify-center gap-2">
+                                <li class="px-3 py-1 bg-white/5 rounded text-xs font-ui text-gold/80 border border-white/5">Introspection</li>
+                                <li class="px-3 py-1 bg-white/5 rounded text-xs font-ui text-gold/80 border border-white/5">Solitude</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- POSITION 2: PRESENT -->
+                <div class="perspective-1000 w-full h-full group" onclick="this.classList.toggle('card-flipped')">
+                    <div class="card-inner w-full h-full relative duration-700">
+                        
+                        <!-- Front -->
+                        <div class="card-face card-front relative border-gold/50 shadow-[0_0_20px_rgba(212,175,55,0.15)]">
+                            <img src="https://images.unsplash.com/photo-1648727247252-5b03f05a3416?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8d2hlZWwlMjBvZiUyMGZvcnR1bmV8ZW58MHx8MHx8fDA%3D" 
+                                 alt="Wheel of Fortune" class="w-full h-full object-cover opacity-70 grayscale-[30%] group-hover:grayscale-0 transition-all duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
+                            
+                            <div class="absolute top-4 left-0 w-full text-center">
+                                <span class="font-ui text-[10px] tracking-widest uppercase text-gold border px-2 py-1 border-gold/60 rounded-full bg-black/80 backdrop-blur-md shadow-lg shadow-gold/20">II. The Present</span>
+                            </div>
+
+                            <div class="absolute bottom-6 left-0 w-full text-center px-4">
+                                <h3 class="font-heading text-2xl text-white tracking-wide text-shadow-gold">Wheel of Fortune</h3>
+                            </div>
+                        </div>
+
+                        <!-- Back -->
+                        <div class="card-back border border-gold shadow-[inset_0_0_30px_rgba(212,175,55,0.1)]">
+                            <div class="absolute top-4 right-4 text-gold/30 text-4xl font-heading opacity-20">X</div>
+                            
+                            <h4 class="font-ui text-[10px] uppercase tracking-[0.25em] text-gold mb-2">Position: The Present</h4>
+                            <h3 class="font-heading text-2xl text-white mb-4 text-shadow-gold">Wheel of Fortune</h3>
+                            
+                            <div class="w-12 h-px bg-gradient-to-r from-transparent via-gold to-transparent mb-6"></div>
+                            
+                            <p class="font-body text-lg md:text-xl text-white leading-snug mb-6">
+                                The universe is shifting gears. What went down is coming up. A stroke of luck or a sudden change in destiny is occurring right now.
+                            </p>
+                            
+                            <ul class="flex flex-wrap justify-center gap-2">
+                                <li class="px-3 py-1 bg-gold/10 rounded text-xs font-ui text-gold border border-gold/20">Karma</li>
+                                <li class="px-3 py-1 bg-gold/10 rounded text-xs font-ui text-gold border border-gold/20">Cycles</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- POSITION 3: FUTURE -->
+                <div class="perspective-1000 w-full h-full group" onclick="this.classList.toggle('card-flipped')">
+                    <div class="card-inner w-full h-full relative duration-700">
+                        
+                        <!-- Front -->
+                        <div class="card-face card-front relative">
+                            <img src="https://images.unsplash.com/photo-1683217956204-d94282206523?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+                                 alt="Ace of Cups" class="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 transition-all duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+                            
+                            <div class="absolute top-4 left-0 w-full text-center">
+                                <span class="font-ui text-[10px] tracking-widest uppercase text-gold/80 border px-2 py-1 border-gold/30 rounded-full bg-black/50 backdrop-blur-md">III. The Future</span>
+                            </div>
+
+                            <div class="absolute bottom-6 left-0 w-full text-center px-4">
+                                <h3 class="font-heading text-xl text-white tracking-wide">Ace of Cups</h3>
+                            </div>
+                        </div>
+
+                        <!-- Back -->
+                        <div class="card-back border-b-4 border-b-gold">
+                            <div class="absolute top-4 right-4 text-gold/30 text-4xl font-heading opacity-20">I</div>
+                            
+                            <h4 class="font-ui text-[10px] uppercase tracking-[0.25em] text-gold mb-2">Position: The Future</h4>
+                            <h3 class="font-heading text-2xl text-white mb-4">Ace of Cups</h3>
+                            
+                            <div class="w-12 h-px bg-gradient-to-r from-transparent via-gold to-transparent mb-6"></div>
+                            
+                            <p class="font-body text-lg md:text-xl text-gray-200 leading-snug mb-6">
+                                An overflowing of emotion awaits. A new relationship, a creative awakening, or a spiritual epiphany will fill your cup.
+                            </p>
+                            
+                            <ul class="flex flex-wrap justify-center gap-2">
+                                <li class="px-3 py-1 bg-white/5 rounded text-xs font-ui text-gold/80 border border-white/5">Love</li>
+                                <li class="px-3 py-1 bg-white/5 rounded text-xs font-ui text-gold/80 border border-white/5">Compassion</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 2: SYNTHESIS (The Overall Interpretation) -->
+        <section class="w-full max-w-4xl relative animate-fade-up" style="animation-delay: 0.3s;">
+            <!-- Vertical connecting line -->
+            <div class="absolute -top-16 left-1/2 -translate-x-1/2 h-16 w-px bg-gradient-to-b from-transparent via-gold/50 to-gold"></div>
+            
+            <div class="relative bg-[#0A0A0A] border border-white/10 p-8 md:p-12 text-center rounded-sm overflow-hidden">
+                <!-- Background decoration -->
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold to-transparent opacity-50"></div>
+                
+                <div class="mb-6 flex justify-center text-gold/40">
+                    <i class="ph ph-sparkle text-2xl"></i>
+                </div>
+
+                <h2 class="font-heading text-3xl md:text-4xl text-white mb-4 text-shadow-gold">The Cosmic Synthesis</h2>
+                <div class="flex justify-center mb-8">
+                    <span class="font-script text-2xl text-gold">"The turning of the tide..."</span>
+                </div>
+
+                <div class="prose prose-invert prose-lg mx-auto font-body text-mist leading-relaxed">
+                    <p>
+                        Your reading suggests a profound transition essentially driven by 
+                        <span class="text-white border-b border-gold/30 pb-0.5">fate</span> itself. 
+                        The <strong class="text-gold font-bold">Hermit</strong> in your past indicates you have done the hard work of self-reflection. 
+                        You pulled back to understand who you truly are.
+                    </p>
+                    <p class="mt-4">
+                        Because of this preparation, the <strong class="text-gold font-bold">Wheel of Fortune</strong> in your present position is not accidental chaos, but destined movement. 
+                        The stagnation breaks now. The universe rewards your solitude with movement.
+                    </p>
+                    <p class="mt-4">
+                        This leads directly to the <strong class="text-gold font-bold">Ace of Cups</strong>—the ultimate promise of emotional fulfillment. 
+                        The Wheel turns you toward love and creativity. Trust the change; it is taking you exactly where your heart needs to go.
+                    </p>
+                </div>
+
+                <div class="mt-10 flex flex-col md:flex-row items-center justify-center gap-6">
+                    <button class="px-8 py-3 bg-gold text-black font-ui font-semibold text-xs tracking-widest uppercase hover:bg-white transition-colors">
+                        Save to Grimoire
+                    </button>
+                    <button class="px-8 py-3 border border-white/20 text-white hover:border-gold hover:text-gold transition-colors font-ui font-medium text-xs tracking-widest uppercase">
+                        Share Reading
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Decorative bottom element -->
+            <div class="flex justify-center mt-6 opacity-30">
+                <img src="https://images.unsplash.com/vector-1744366090684-972986ad4898?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+                     class="w-12 h-12 invert" alt="Pentagram Element" style="filter: brightness(0.5) sepia(1) hue-rotate(10deg);">
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="w-full py-6 text-center border-t border-white/5 bg-black z-10">
+        <p class="font-ui text-[10px] text-white/20 uppercase tracking-widest">Amor Fati v0.9 • Memento Mori</p>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amor Fati - Initiation</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Montserrat:wght@400;500;600;700&family=Pinyon+Script&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#050505',     // Main background
+                        panel: '#0a0505',    // Solid panel background
+                        surface: '#120808',   // Card surface
+                        gold: '#d4af37',
+                        ivory: '#f2e8e3',
+                        subtle: '#9ca3af'
+                    },
+                    fontFamily: {
+                        display: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Montserrat"', 'sans-serif'],
+                        script: ['"Pinyon Script"', 'cursive'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'fade-enter': 'fadeEnter 0.5s ease-out forwards',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        fadeEnter: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050505;
+            color: #f2e8e3;
+            overflow: hidden;
+            cursor: none;
+        }
+
+        /* --- LEGIBILITY CORE --- */
+        /* Ensuring the right panel is solid and opaque */
+        .interaction-panel {
+            background-color: #080303; 
+            border-left: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+            z-index: 20;
+        }
+
+        /* Distinct Input Cards */
+        .option-card {
+            background-color: #120808;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.2s ease-in-out;
+        }
+        .option-card:hover {
+            border-color: #d4af37;
+            background-color: #1a0f0f;
+            transform: translateY(-2px);
+        }
+        .option-card.selected {
+            border-color: #d4af37;
+            background-color: #261010;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Custom Cursor */
+        .cursor-dot {
+            width: 8px; height: 8px; background-color: #d4af37;
+            position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+            border-radius: 50%; pointer-events: none; z-index: 9999;
+            box-shadow: 0 0 10px #d4af37;
+        }
+        .cursor-outline {
+            width: 40px; height: 40px; border: 1px solid rgba(212, 175, 55, 0.5);
+            position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+            border-radius: 50%; pointer-events: none; z-index: 9999;
+            transition: width 0.3s, height 0.3s, background-color 0.3s;
+        }
+
+        /* Step Logic */
+        .step-container {
+            display: none;
+            height: 100%;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .step-container.active {
+            display: flex;
+            animation: fadeEnter 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        /* Progress Dots */
+        .progress-dot {
+            height: 4px; width: 4px; border-radius: 99px; background: rgba(255,255,255,0.2);
+            transition: all 0.5s ease;
+        }
+        .progress-dot.active {
+            width: 32px; background: #d4af37;
+        }
+        .progress-dot.completed {
+            background: #d4af37; opacity: 0.5;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen flex items-center justify-center font-sans tracking-wide">
+
+    <!-- Cursor -->
+    <div class="cursor-dot hidden md:block"></div>
+    <div class="cursor-outline hidden md:block"></div>
+
+    <!-- Background (Dark & Subtle) -->
+    <div class="absolute inset-0 bg-void z-0">
+        <div class="absolute inset-0 bg-gradient-radial from-[#1a0505] to-void opacity-60"></div>
+        <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=2600&auto=format&fit=crop" class="w-full h-full object-cover opacity-[0.05] grayscale mix-blend-screen" alt="Noise">
+    </div>
+
+    <!-- MAIN ONBOARDING CONTAINER -->
+    <main class="relative z-10 w-full h-full md:w-[1100px] md:h-[650px] flex flex-col md:flex-row bg-[#080303] md:rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+        
+        <!-- LEFT PANEL: Visuals (Fixed for Vibes) -->
+        <div class="hidden md:flex flex-col justify-between w-[45%] relative p-12 bg-black">
+            <!-- Dynamic Image Layer -->
+            <div class="absolute inset-0 z-0">
+                <img id="hero-image" src="https://images.unsplash.com/opengraph/1x1.png?mark=https%3A%2F%2Fimages.unsplash.com%2Fopengraph%2Flogo.png&mark-w=64&mark-align=top%2Cleft&mark-pad=50&h=630&w=1200&blend=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1576510683662-0f5a01be2114%3Fcrop%3Dfaces%252Cedges%26h%3D630%26w%3D1200%26blend%3D000000%26blend-mode%3Dnormal%26blend-alpha%3D10%26mark-w%3D750%26mark-align%3Dmiddle%252Ccenter%26mark%3Dhttps%253A%252F%252Fimages.unsplash.com%252Fopengraph%252Fsearch-input.png%253Fw%253D750%2526h%253D84%2526txt%253Dvisual%2526txt-pad%253D80%2526txt-align%253Dmiddle%25252Cleft%2526txt-color%253D%252523000000%2526txt-size%253D40%2526txt-width%253D660%2526txt-clip%253Dellipsis%2526auto%253Dformat%2526fit%253Dcrop%2526q%253D60%26auto%3Dformat%26fit%3Dcrop%26q%3D60%26ixid%3DM3wxMjA3fDB8MXxzZWFyY2h8M3x8dmlzdWFsfGVufDB8fHx8MTc2NzE2Nzg1Mnww%26ixlib%3Drb-4.1.0&blend-w=1&auto=format&fit=crop&q=60" class="w-full h-full object-cover opacity-50 transition-opacity duration-700 mx-blend-overlay" alt="Visual">
+                <!-- Heavy Gradient for Text Legibility -->
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/20"></div>
+            </div>
+
+            <!-- Content Over Visuals -->
+            <div class="relative z-10">
+                <h3 class="font-display text-2xl text-white tracking-widest font-bold">AMOR <span class="text-gold">FATI</span></h3>
+            </div>
+
+            <div class="relative z-10">
+                 <h2 id="hero-title" class="font-display text-5xl text-ivory leading-[0.9] drop-shadow-lg mb-6 transition-all duration-500">
+                    Your Fate<br>Awaits
+                </h2>
+                <!-- Progress Indicators -->
+                <div class="flex gap-2">
+                    <div id="dot-1" class="progress-dot active"></div>
+                    <div id="dot-2" class="progress-dot"></div>
+                    <div id="dot-3" class="progress-dot"></div>
+                    <div id="dot-4" class="progress-dot"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL: Interaction (SOLID BACKGROUND FOR LEGIBILITY) -->
+        <div class="flex-1 interaction-panel p-8 md:p-16 flex flex-col">
+            
+            <!-- Mobile Header -->
+            <div class="md:hidden flex justify-between items-center mb-8">
+                <span class="font-display text-xl text-white font-bold">AMOR FATI</span>
+                <div class="flex gap-1">
+                    <div class="w-16 h-1 bg-gold rounded-full"></div>
+                    <div class="w-4 h-1 bg-white/20 rounded-full"></div>
+                </div>
+            </div>
+
+            <!-- STEP 1: WELCOME -->
+            <div id="step-1" class="step-container active">
+                <div class="flex-1 flex flex-col justify-center">
+                    <span class="font-sans text-xs font-bold text-gold uppercase tracking-[0.2em] mb-4">Digital Grimoire Vol. I</span>
+                    <h1 class="font-display text-5xl md:text-6xl text-white mb-6 leading-none">
+                        Enter the <br>
+                        <span class="font-script text-6xl md:text-7xl text-ivory mt-2 block">Void</span>
+                    </h1>
+                    <p class="font-sans text-[15px] font-medium text-ivory/80 leading-relaxed max-w-md">
+                        This is not just prediction. It is a mirror. Amor Fati combines <span class="text-white font-bold">Jungian psychology</span> with the ancient archetype of Tarot to help you construct your own destiny.
+                    </p>
+                </div>
+
+                <div class="mt-8 border-t border-white/10 pt-8">
+                    <button onclick="changeStep(2)" class="w-full md:w-auto px-8 py-4 bg-[#1a0f0f] border border-white/20 hover:border-gold hover:bg-[#261010] text-white font-sans text-xs font-bold uppercase tracking-[0.2em] flex items-center justify-between gap-6 transition-all group">
+                        Begin Initiation
+                        <i class="ph-bold ph-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                    <p class="mt-4 font-sans text-[10px] font-semibold text-white/40 uppercase tracking-widest text-center md:text-left">
+                        By entering, you accept the threads of fate.
+                    </p>
+                </div>
+            </div>
+
+            <!-- STEP 2: BENEFITS (AI + JOURNAL) -->
+            <div id="step-2" class="step-container">
+                <div class="flex-1 flex flex-col justify-center">
+                    <div class="w-14 h-14 rounded-full border border-gold/40 bg-gold/10 flex items-center justify-center mb-8 animate-float">
+                        <i class="ph-light ph-sparkle text-2xl text-gold"></i>
+                    </div>
+
+                    <h2 class="font-display text-4xl md:text-5xl text-white mb-6">The Synthesizer</h2>
+                    
+                    <div class="space-y-4 mb-8">
+                        <div class="flex gap-4">
+                            <span class="h-px w-8 bg-gold mt-3"></span>
+                            <div>
+                                <h4 class="font-display text-xl text-white mb-1">AI Oracle Engine</h4>
+                                <p class="font-sans text-sm text-ivory/70 font-medium">Synthesizes your daily card with real-time planetary transits.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <span class="h-px w-8 bg-white/20 mt-3"></span>
+                            <div>
+                                <h4 class="font-display text-xl text-white mb-1">Pattern Recognition</h4>
+                                <p class="font-sans text-sm text-ivory/70 font-medium">Detects recurring archetypes in your life over weeks and months.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex items-center justify-between pt-8 border-t border-white/10">
+                    <button onclick="changeStep(1)" class="text-xs font-bold text-white/50 hover:text-white uppercase tracking-widest transition-colors">Back</button>
+                    <button onclick="changeStep(3)" class="px-8 py-3 bg-ivory hover:bg-white text-black font-sans text-xs font-bold uppercase tracking-widest transition-all">
+                        Set Intentions
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 3: PREFERENCES (GOALS) -->
+            <div id="step-3" class="step-container">
+                <div class="mb-8">
+                    <h2 class="font-display text-4xl text-white mb-3">What do you seek?</h2>
+                    <p class="font-sans text-xs font-bold text-white/50 uppercase tracking-widest">Select all that resonate</p>
+                </div>
+
+                <div class="space-y-4 mb-8">
+                    <!-- Option 1 -->
+                    <label class="option-card p-5 cursor-pointer flex items-center gap-4 group rounded-sm" onclick="toggleOption(this)">
+                        <div class="w-5 h-5 rounded-full border border-white/30 flex items-center justify-center group-hover:border-gold transition-colors bg-black flex-shrink-0">
+                            <div class="w-2.5 h-2.5 rounded-full bg-gold opacity-0 transition-opacity"></div>
+                        </div>
+                        <div>
+                            <span class="font-display text-2xl text-white group-hover:text-gold transition-colors">Shadow Work</span>
+                            <span class="block font-sans text-[11px] font-semibold text-white/60 uppercase tracking-wider mt-1">Confront the unconscious</span>
+                        </div>
+                    </label>
+
+                    <!-- Option 2 -->
+                    <label class="option-card p-5 cursor-pointer flex items-center gap-4 group rounded-sm" onclick="toggleOption(this)">
+                         <div class="w-5 h-5 rounded-full border border-white/30 flex items-center justify-center group-hover:border-gold transition-colors bg-black flex-shrink-0">
+                            <div class="w-2.5 h-2.5 rounded-full bg-gold opacity-0 transition-opacity"></div>
+                        </div>
+                        <div>
+                            <span class="font-display text-2xl text-white group-hover:text-gold transition-colors">Clarity</span>
+                            <span class="block font-sans text-[11px] font-semibold text-white/60 uppercase tracking-wider mt-1">Navigate life's crossroads</span>
+                        </div>
+                    </label>
+
+                    <!-- Option 3 -->
+                    <label class="option-card p-5 cursor-pointer flex items-center gap-4 group rounded-sm" onclick="toggleOption(this)">
+                         <div class="w-5 h-5 rounded-full border border-white/30 flex items-center justify-center group-hover:border-gold transition-colors bg-black flex-shrink-0">
+                            <div class="w-2.5 h-2.5 rounded-full bg-gold opacity-0 transition-opacity"></div>
+                        </div>
+                        <div>
+                            <span class="font-display text-2xl text-white group-hover:text-gold transition-colors">Cosmic Alignment</span>
+                            <span class="block font-sans text-[11px] font-semibold text-white/60 uppercase tracking-wider mt-1">Sync with the stars</span>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="mt-auto flex items-center justify-between pt-8 border-t border-white/10">
+                    <button onclick="changeStep(2)" class="text-xs font-bold text-white/50 hover:text-white uppercase tracking-widest transition-colors">Back</button>
+                    <button onclick="changeStep(4)" class="px-8 py-3 bg-ivory hover:bg-white text-black font-sans text-xs font-bold uppercase tracking-widest transition-all">
+                        Continue
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 4: NOTIFICATIONS -->
+            <div id="step-4" class="step-container">
+                <div class="flex-1 flex flex-col justify-center items-center text-center">
+                    <div class="w-20 h-20 mb-8 relative">
+                        <div class="absolute inset-0 border border-gold/40 rounded-full animate-ping opacity-20"></div>
+                        <div class="absolute inset-0 border border-white/20 bg-white/5 rounded-full flex items-center justify-center">
+                            <i class="ph-thin ph-bell-simple-ringing text-4xl text-gold"></i>
+                        </div>
+                    </div>
+
+                    <h2 class="font-display text-4xl text-white mb-4">The Witching Hour</h2>
+                    <p class="font-sans text-[14px] font-medium text-ivory/80 leading-relaxed max-w-xs mb-8">
+                        May we notify you when the stars align, and remind you to draw your daily card?
+                    </p>
+
+                    <button onclick="finishOnboarding()" class="w-full max-w-xs px-8 py-4 bg-gold hover:bg-white text-black font-sans text-xs font-bold uppercase tracking-widest transition-all mb-4 shadow-[0_0_20px_rgba(212,175,55,0.3)]">
+                        Allow Notifications
+                    </button>
+                    <button onclick="finishOnboarding()" class="text-[10px] font-bold text-white/40 hover:text-white uppercase tracking-widest transition-colors py-2">
+                        Silence for now
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // Data
+        const visuals = [
+            "https://images.unsplash.com/opengraph/1x1.png?mark=https%3A%2F%2Fimages.unsplash.com%2Fopengraph%2Flogo.png&mark-w=64&mark-align=top%2Cleft&mark-pad=50&h=630&w=1200&blend=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1576510683662-0f5a01be2114%3Fcrop%3Dfaces%252Cedges%26h%3D630%26w%3D1200%26blend%3D000000%26blend-mode%3Dnormal%26blend-alpha%3D10%26mark-w%3D750%26mark-align%3Dmiddle%252Ccenter%26mark%3Dhttps%253A%252F%252Fimages.unsplash.com%252Fopengraph%252Fsearch-input.png%253Fw%253D750%2526h%253D84%2526txt%253Dvisual%2526txt-pad%253D80%2526txt-align%253Dmiddle%25252Cleft%2526txt-color%253D%252523000000%2526txt-size%253D40%2526txt-width%253D660%2526txt-clip%253Dellipsis%2526auto%253Dformat%2526fit%253Dcrop%2526q%253D60%26auto%3Dformat%26fit%3Dcrop%26q%3D60%26ixid%3DM3wxMjA3fDB8MXxzZWFyY2h8M3x8dmlzdWFsfGVufDB8fHx8MTc2NzE2Nzg1Mnww%26ixlib%3Drb-4.1.0&blend-w=1&auto=format&fit=crop&q=60", // Card
+            "https://images.unsplash.com/photo-1544365558-3596badc77fe?q=80&w=800&auto=format&fit=crop", // Writing/Journal
+            "https://images.unsplash.com/photo-1518155317743-a4af96fcad53?q=80&w=800&auto=format&fit=crop", // Stars
+            "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=800&auto=format&fit=crop"  // Smoke
+        ];
+        
+        const titles = [
+            "Your Fate\nAwaits",
+            "The\nTechnology",
+            "Set\nIntentions",
+            "Stay\nConnected"
+        ];
+
+        let currentStep = 1;
+
+        function changeStep(nextStep) {
+            // Remove active class from current
+            document.getElementById(`step-${currentStep}`).classList.remove('active');
+            
+            // Add active class to next after slight delay
+            setTimeout(() => {
+                 document.getElementById(`step-${nextStep}`).classList.add('active');
+            }, 50);
+
+            // Update Progress Dots
+            document.querySelectorAll('.progress-dot').forEach((dot, idx) => {
+                if (idx < nextStep - 1) {
+                    dot.className = "progress-dot completed";
+                } else if (idx === nextStep - 1) {
+                    dot.className = "progress-dot active";
+                } else {
+                    dot.className = "progress-dot";
+                }
+            });
+
+            // Update Visuals (Left Panel)
+            const heroImg = document.getElementById('hero-image');
+            const heroTitle = document.getElementById('hero-title');
+            
+            heroImg.style.opacity = '0';
+            heroTitle.style.opacity = '0';
+            
+            setTimeout(() => {
+                heroImg.src = visuals[nextStep - 1];
+                heroTitle.innerText = titles[nextStep - 1];
+                heroImg.style.opacity = '0.5';
+                heroTitle.style.opacity = '1';
+                currentStep = nextStep;
+            }, 300);
+        }
+
+        function toggleOption(el) {
+            el.classList.toggle('selected');
+            const dot = el.querySelector('.bg-gold');
+            if(el.classList.contains('selected')) {
+                dot.style.opacity = '1';
+            } else {
+                dot.style.opacity = '0';
+            }
+        }
+
+        function finishOnboarding() {
+            const main = document.querySelector('main');
+            main.style.transition = "transform 0.8s ease-in, opacity 0.8s ease-in";
+            main.style.transform = "scale(0.95) translateY(-20px)";
+            main.style.opacity = "0";
+            
+            setTimeout(() => {
+                alert("Onboarding Complete. Welcome to Amor Fati.");
+                location.reload();
+            }, 1000);
+        }
+
+        // Custom Cursor Logic
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+
+        window.addEventListener('mousemove', (e) => {
+            cursorDot.style.left = `${e.clientX}px`;
+            cursorDot.style.top = `${e.clientY}px`;
+            
+            cursorOutline.animate({
+                left: `${e.clientX}px`,
+                top: `${e.clientY}px`
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        document.querySelectorAll('button, .option-card, .cursor-pointer').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorOutline.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                cursorOutline.style.backgroundColor = 'rgba(212, 175, 55, 0.1)';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursorOutline.style.transform = 'translate(-50%, -50%) scale(1)';
+                cursorOutline.style.backgroundColor = 'transparent';
+            });
+        });
+    </script>
+</body>
+</html>

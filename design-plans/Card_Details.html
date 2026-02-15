@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amor Fati - The Moon (XVIII)</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&family=Pinyon+Script&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <!-- GSAP for smooth parallax (Optional but simulated via CSS for single file) -->
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#050505',
+                        surface: '#111111',
+                        border: '#2a2a2a',
+                        gold: '#C5A059',
+                        silver: '#d4d4d8',
+                    },
+                    fontFamily: {
+                        heading: ['"Cinzel"', 'serif'],
+                        body: ['"Cormorant Garamond"', 'serif'],
+                        ui: ['"Inter"', 'sans-serif'],
+                        script: ['"Pinyon Script"', 'cursive'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 1s ease-out forwards',
+                        'slide-up': 'slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(40px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050505;
+            color: #d4d4d8;
+            overflow-x: hidden;
+        }
+        
+        /* Smooth Scrolling */
+        html { scroll-behavior: smooth; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #C5A059; }
+
+        /* Split Screen Geometry */
+        .card-stage {
+            height: 100vh;
+            position: sticky;
+            top: 0;
+        }
+
+        /* Keyword chips */
+        .keyword-chip {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03);
+            transition: all 0.3s ease;
+        }
+        .keyword-chip:hover {
+            border-color: #C5A059;
+            color: #C5A059;
+        }
+
+        /* Tabs */
+        .tab-btn {
+            position: relative;
+        }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background-color: #C5A059;
+            border-radius: 50%;
+        }
+        .tab-btn.active {
+            color: #C5A059;
+        }
+
+        /* Symbolism Hover */
+        .symbol-item {
+            border-left: 1px solid rgba(255,255,255,0.1);
+            padding-left: 1rem;
+            transition: all 0.3s ease;
+        }
+        .symbol-item:hover {
+            border-left-color: #C5A059;
+            padding-left: 1.5rem;
+        }
+    </style>
+</head>
+<body class="selection:bg-gold selection:text-black">
+
+    <!-- NAVIGATION OVERLAY -->
+    <nav class="fixed top-0 left-0 w-full z-50 px-6 py-6 flex justify-between items-center mix-blend-difference pointer-events-none">
+        <a href="#" class="flex items-center gap-2 pointer-events-auto group" rel="nofollow">
+            <i class="ph-bold ph-arrow-left text-xl text-white group-hover:-translate-x-1 transition-transform"></i>
+            <span class="font-ui text-xs font-bold uppercase tracking-widest text-white opacity-0 group-hover:opacity-100 transition-opacity">Library</span>
+        </a>
+        <div class="flex gap-4 pointer-events-auto">
+            <button class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors">
+                <i class="ph ph-heart text-lg"></i>
+            </button>
+            <button class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors">
+                <i class="ph ph-share-network text-lg"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- CONTENT LAYOUT -->
+    <div class="flex flex-col lg:flex-row w-full min-h-screen">
+
+        <!-- LEFT COLUMN: VISUAL STAGE (Sticky) -->
+        <section class="lg:w-1/2 h-[60vh] lg:h-screen lg:sticky lg:top-0 bg-surface flex flex-col items-center justify-center relative overflow-hidden border-r border-[#1a1a1a]">
+            
+            <!-- Ambient Background fx -->
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_#1a1a1a_0%,_#050505_100%)]"></div>
+            <div class="absolute inset-0 opacity-10" style="background-image: url('https://www.transparenttextures.com/patterns/stardust.png');"></div>
+            
+            <!-- The Card -->
+            <div class="relative z-10 w-64 md:w-80 lg:w-[400px] aspect-[2/3.4] perspective-1000 animate-slide-up">
+                <div class="relative w-full h-full shadow-[0_20px_60px_-10px_rgba(0,0,0,0.7)] rounded-lg overflow-hidden border border-white/10 group">
+                    <img src="https://images.unsplash.com/photo-1572925077991-61acf7d70608?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGhlJTIwbW9vbnxlbnwwfHwwfHx8MA%3D%3D" 
+                         alt="The Moon Tarot Card Detail" 
+                         class="w-full h-full object-cover transition-transform duration-[2s] hover:scale-110">
+                    <div class="absolute inset-0 shadow-[inset_0_0_40px_rgba(0,0,0,0.5)]"></div>
+                    
+                    <!-- Magnify hint -->
+                    <div class="absolute bottom-4 right-4 w-8 h-8 bg-black/50 backdrop-blur rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <i class="ph ph-magnifying-glass-plus text-white"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Number Watermark -->
+            <h1 class="absolute bottom-0 left-0 font-heading text-[12rem] md:text-[20rem] leading-none text-white/5 font-bold select-none pointer-events-none -mb-10 -ml-10">XVIII</h1>
+
+        </section>
+
+        <!-- RIGHT COLUMN: THE KNOWLEDGE (Scrollable) -->
+        <section class="lg:w-1/2 bg-void min-h-screen relative z-10">
+            
+            <div class="max-w-2xl mx-auto px-6 py-12 lg:py-24 space-y-16">
+
+                <!-- HEADER & IDENTITY -->
+                <header class="space-y-4 animate-slide-up" style="animation-delay: 0.1s;">
+                    <div class="flex items-center gap-4 text-gold/60 font-ui text-xs font-bold uppercase tracking-[0.2em]">
+                        <span>Major Arcana</span>
+                        <span class="w-1 h-1 bg-gold rounded-full"></span>
+                        <span>Number 18</span>
+                        <span class="w-1 h-1 bg-gold rounded-full"></span>
+                        <span>Pisces</span>
+                    </div>
+                    <h1 class="font-heading text-5xl md:text-6xl text-white">The Moon</h1>
+                    <p class="font-body text-2xl text-gray-400 italic font-light leading-relaxed border-l-2 border-gold/50 pl-6 my-6">
+                        "The reflected light that deceives the eye, revealing the path through the subconscious mind."
+                    </p>
+                </header>
+
+                <!-- DUAL MEANINGS (Keywords) -->
+                <div class="space-y-8 animate-slide-up" style="animation-delay: 0.2s;">
+                    
+                    <!-- Upright -->
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <i class="ph-fill ph-arrow-up text-gold"></i>
+                            <h3 class="font-ui text-sm font-bold uppercase tracking-widest text-white">Upright</h3>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="keyword-chip px-3 py-1 rounded-full text-xs font-ui uppercase text-gray-400">Illusion</span>
+                            <span class="keyword-chip px-3 py-1 rounded-full text-xs font-ui uppercase text-gray-400">Fear</span>
+                            <span class="keyword-chip px-3 py-1 rounded-full text-xs font-ui uppercase text-gray-400">Anxiety</span>
+                            <span class="keyword-chip px-3 py-1 rounded-full text-xs font-ui uppercase text-gray-400">Subconscious</span>
+                            <span class="keyword-chip px-3 py-1 rounded-full text-xs font-ui uppercase text-gray-400">Intuition</span>
+                        </div>
+                        <p class="font-body text-lg text-gray-300 mt-4 leading-relaxed">
+                            The Moon represents a time of uncertainty and illusion, when nothing is as it seems. Be careful of making fast decisions, as you may realize later that you only had half the information. You need to listen to and trust your intuition so you can see past the illusion.
+                        </p>
+                    </div>
+
+                    <div class="w-full h-px bg-white/10"></div>
+
+                    <!-- Reversed -->
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <i class="ph-fill ph-arrow-down text-gray-600"></i>
+                            <h3 class="font-ui text-sm font-bold uppercase tracking-widest text-gray-400">Reversed</h3>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="keyword-chip px-3 py-1 rounded-full text-xs font-ui uppercase text-gray-500">Release of Fear</span>
+                            <span class="keyword-chip px-3 py-1 rounded-full text-xs font-ui uppercase text-gray-500">Unhappiness</span>
+                            <span class="keyword-chip px-3 py-1 rounded-full text-xs font-ui uppercase text-gray-500">Confusion</span>
+                            <span class="keyword-chip px-3 py-1 rounded-full text-xs font-ui uppercase text-gray-500">Deception</span>
+                        </div>
+                        <p class="font-body text-lg text-gray-500 mt-4 leading-relaxed">
+                            Reversed, The Moon indicates that the illusions are fading, and you are beginning to see the truth of the situation. The fears that held you back are dissipating as clarity returns.
+                        </p>
+                    </div>
+
+                </div>
+
+                <!-- DESCRIPTION & SYMBOLISM -->
+                <div class="space-y-8 animate-slide-up" style="animation-delay: 0.3s;">
+                    <h2 class="font-heading text-2xl text-white">Symbolism & Imagery</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Visual Description -->
+                        <div class="col-span-1 md:col-span-2">
+                            <p class="font-body text-lg text-gray-300 leading-relaxed mb-6">
+                                A full moon (with a crescent within) hangs in the sky between two large towers. In the foreground, a small crayfish crawls out of a pool of water composed of the subconscious darker mind. A dog and a wolf stand in the grassy field, howling at the moon, representing the tamed and wild aspects of our minds.
+                            </p>
+                        </div>
+
+                        <!-- Symbols List -->
+                        <div class="space-y-6">
+                            <div class="symbol-item">
+                                <h4 class="font-heading text-gold text-lg">The Crayfish</h4>
+                                <p class="text-sm text-gray-500 mt-1">Emerging from the primordial waters, symbolizing the early stages of consciousness unfolding.</p>
+                            </div>
+                            <div class="symbol-item">
+                                <h4 class="font-heading text-gold text-lg">The Towers</h4>
+                                <p class="text-sm text-gray-500 mt-1">Represent the dichotomy of good and evil, and the gateway into the unknown.</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-6">
+                            <div class="symbol-item">
+                                <h4 class="font-heading text-gold text-lg">Dog & Wolf</h4>
+                                <p class="text-sm text-gray-500 mt-1">The dual nature of the mind: the civilized, domestic self versus the feral, primal instinct.</p>
+                            </div>
+                            <div class="symbol-item">
+                                <h4 class="font-heading text-gold text-lg">The Path</h4>
+                                <p class="text-sm text-gray-500 mt-1">A narrow winding road that leads toward the mountains, signifying the long journey to higher consciousness.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CORRESPONDENCES (Data Table) -->
+                <div class="bg-[#0f0f0f] border border-white/5 rounded-lg p-6 md:p-8 animate-slide-up" style="animation-delay: 0.4s;">
+                    <h3 class="font-ui text-xs font-bold uppercase tracking-widest text-gray-500 mb-6">Associations</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div>
+                            <span class="block text-[10px] uppercase text-gray-600 mb-1">Element</span>
+                            <div class="flex items-center gap-2 text-white font-heading text-lg">
+                                <i class="ph-fill ph-drop text-blue-400"></i> Water
+                            </div>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] uppercase text-gray-600 mb-1">Planet</span>
+                            <div class="flex items-center gap-2 text-white font-heading text-lg">
+                                <i class="ph-fill ph-moon text-gray-300"></i> The Moon
+                            </div>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] uppercase text-gray-600 mb-1">Zodiac</span>
+                            <div class="flex items-center gap-2 text-white font-heading text-lg">
+                                <i class="ph-fill ph-fish text-purple-400"></i> Pisces
+                            </div>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] uppercase text-gray-600 mb-1">Yes / No</span>
+                            <div class="flex items-center gap-2 text-white font-heading text-lg">
+                                <span class="text-gray-400">Unclear / No</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FOOTER NAV -->
+                <div class="flex justify-between items-center py-8 border-t border-white/5">
+                    <a href="#" class="text-left group" rel="nofollow">
+                        <span class="block text-[10px] uppercase tracking-widest text-gray-600 group-hover:text-gold mb-1">Previous</span>
+                        <span class="font-heading text-xl text-white">XVII. The Star</span>
+                    </a>
+                    <a href="#" class="text-right group" rel="nofollow">
+                        <span class="block text-[10px] uppercase tracking-widest text-gray-600 group-hover:text-gold mb-1">Next</span>
+                        <span class="font-heading text-xl text-white">XIX. The Sun</span>
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+
+</body>
+</html>

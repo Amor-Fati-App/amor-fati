@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amor Fati - The Romantic Tarot</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,600&family=Montserrat:wght@200;300;400;500&family=Pinyon+Script&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#050505',
+                        oxblood: '#2a0a12',
+                        crimson: '#6b181e',
+                        gold: '#d4af37',
+                        rose: '#cf9893',
+                        lavender: '#bfaac1',
+                        paper: '#f5f0e6'
+                    },
+                    fontFamily: {
+                        display: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Montserrat"', 'sans-serif'],
+                        script: ['"Pinyon Script"', 'cursive'], // New Script Font
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'spin-slow': 'spin 18s linear infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base Styles */
+        body {
+            background-color: #050505;
+            color: #cf9893;
+            overflow-x: hidden;
+            cursor: none; 
+        }
+
+        /* NEW: High Contrast Card Styles */
+        .card-surface {
+            background: linear-gradient(145deg, #1a0f0f 0%, #0a0202 100%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.8);
+        }
+        
+        .card-surface:hover {
+            border-color: rgba(212, 175, 55, 0.5);
+            box-shadow: 0 20px 50px -12px rgba(107, 24, 30, 0.5);
+        }
+
+        /* Custom Cursor */
+        .cursor-dot {
+            width: 6px; height: 6px; background-color: #d4af37;
+            position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+            border-radius: 50%; pointer-events: none; z-index: 9999;
+            box-shadow: 0 0 10px #d4af37;
+        }
+        .cursor-outline {
+            width: 50px; height: 50px; border: 1px solid rgba(212, 175, 55, 0.3);
+            position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+            border-radius: 50%; pointer-events: none; z-index: 9999;
+            transition: width 0.3s, height 0.3s, background-color 0.3s;
+        }
+
+        /* Gradient Text */
+        .text-gradient-gold {
+            background: linear-gradient(to right, #cf9893, #d4af37, #cf9893);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: shine 5s linear infinite;
+        }
+        @keyframes shine { to { background-position: 200% center; } }
+
+        /* Smooth Reveal */
+        .reveal-view {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease-out;
+        }
+        .reveal-view.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Grain texture overlay */
+        .grain-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.3;
+        }
+
+        /* Borders */
+        .gold-border-corner {
+            position: relative;
+        }
+        .gold-border-corner::before,
+        .gold-border-corner::after {
+            content: ''; position: absolute; width: 10px; height: 10px;
+            border-color: #d4af37; border-style: solid; transition: all 0.5s ease;
+        }
+        .gold-border-corner::before { top: 0; left: 0; border-width: 1px 0 0 1px; }
+        .gold-border-corner::after { bottom: 0; right: 0; border-width: 0 1px 1px 0; }
+        
+        .gold-border-corner:hover::before,
+        .gold-border-corner:hover::after { width: 100%; height: 100%; border-color: rgba(212, 175, 55, 0.5); }
+    </style>
+</head>
+<body class="selection:bg-crimson selection:text-white">
+
+    <!-- Global Grain -->
+    <div class="grain-overlay"></div>
+
+    <!-- Cursor -->
+    <div class="cursor-dot hidden md:block"></div>
+    <div class="cursor-outline hidden md:block"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 px-8 py-6 mix-blend-difference">
+        <div class="max-w-7xl mx-auto flex justify-between items-end border-b border-white/10 pb-4">
+            <div class="flex flex-col group cursor-pointer">
+                <span class="font-sans text-[10px] tracking-[0.4em] text-gold uppercase mb-1 group-hover:tracking-[0.6em] transition-all">Vol. I</span>
+                <a href="#" class="font-display text-3xl text-white tracking-wider" rel="nofollow">Amor <span class="font-script text-4xl text-gold">Fati</span></a>
+            </div>
+            
+            <div class="hidden md:flex gap-12 font-sans text-xs tracking-[0.2em] font-light text-rose/80 uppercase items-center">
+                <a href="#tarot" class="hover:text-gold transition-colors hover:font-bold" rel="nofollow">The Spread</a>
+                <a href="#features" class="hover:text-gold transition-colors hover:font-bold" rel="nofollow">Features</a>
+                <a href="#journal" class="hover:text-gold transition-colors hover:font-bold" rel="nofollow">Journal</a>
+                <button class="font-display italic text-lg text-white hover:text-gold transition-colors border border-white/20 px-6 py-1 rounded-full hover:bg-white/10">Sign In</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ROMANTIC HERO -->
+    <header class="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden">
+        
+        <!-- Background Layer -->
+        <div class="absolute inset-0 bg-void">
+            <div class="absolute inset-0 bg-gradient-to-b from-oxblood/40 via-void to-void z-0"></div>
+            <!-- Abstract Romantic Imagery -->
+            <div class="absolute inset-0 opacity-40 mix-blend-screen pointer-events-none">
+                <img src="https://images.unsplash.com/photo-1741017162002-fac8e37509f9?fm=jpg&amp;q=60&amp;w=3000&amp;ixlib=rb-4.1.0&amp;ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDE4fHx8ZW58MHx8fHx8" class="w-full h-full object-cover blur-sm scale-105 animate-pulse-slow" alt="Atmospheric nebulas and roses">
+            </div>
+        </div>
+
+        <!-- Central Composition -->
+        <div class="relative z-10 flex flex-col items-center text-center px-4">
+            
+            <div class="mb-4 opacity-0 animate-fade-in-up flex items-center gap-4" style="animation-delay: 0.2s;">
+                <span class="h-[1px] w-8 bg-gold/50"></span>
+                <i class="ph-thin ph-star-four text-gold text-2xl animate-spin-slow"></i>
+                <span class="h-[1px] w-8 bg-gold/50"></span>
+            </div>
+
+            <!-- Main Title -->
+            <div class="relative select-none">
+                <h1 class="font-display text-[14vw] md:text-[10rem] leading-[0.85] text-white mix-blend-overlay opacity-0 animate-fade-in-up" style="animation-delay: 0.4s;">
+                    AMOR
+                </h1>
+                <h1 class="font-script text-[15vw] md:text-[11rem] leading-[0.5] text-gradient-gold opacity-0 animate-fade-in-up -mt-2 md:-mt-8 relative z-20 transform -rotate-6 origin-center" style="animation-delay: 0.6s;">
+                    Fati
+                </h1>
+            </div>
+
+            <!-- Subheading -->
+            <div class="mt-16 max-w-lg opacity-0 animate-fade-in-up" style="animation-delay: 0.8s;">
+                <p class="font-display text-2xl md:text-3xl text-rose/90 leading-relaxed">
+                    Fall in love with your own <span class="font-script text-4xl text-gold">destiny</span>.
+                </p>
+                <p class="font-sans text-xs text-rose/60 mt-4 tracking-widest uppercase font-light">
+                    The Modern Tarot Journal &amp; Astrological Companion
+                </p>
+            </div>
+
+            <!-- CTA -->
+            <div class="mt-12 opacity-0 animate-fade-in-up" style="animation-delay: 1.0s;">
+                <a href="#tarot" class="group relative inline-flex items-center gap-4 px-10 py-4 bg-transparent border border-crimson/40 rounded-full transition-all duration-500 hover:bg-crimson/10 hover:border-gold/60" rel="nofollow">
+                    <span class="font-sans text-[10px] uppercase tracking-[0.25em] text-white group-hover:text-gold transition-colors">Enter the Void</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Marquee -->
+    <div class="w-full bg-oxblood border-y border-white/5 py-4 overflow-hidden relative z-20">
+        <div class="flex whitespace-nowrap animate-[spin-slow_20s_linear_infinite] w-max hover:animation-play-state:paused cursor-help">
+            <span class="mx-12 font-display text-xl text-rose/40 italic">As Above, So Below</span>
+            <i class="ph-fill ph-star-four text-[10px] text-gold pt-2"></i>
+            <span class="mx-12 font-display text-xl text-rose/40 italic">Amor Fati</span>
+            <i class="ph-fill ph-star-four text-[10px] text-gold pt-2"></i>
+            <span class="mx-12 font-display text-xl text-rose/40 italic">Memento Mori</span>
+            <i class="ph-fill ph-star-four text-[10px] text-gold pt-2"></i>
+            <span class="mx-12 font-display text-xl text-rose/40 italic">As Above, So Below</span>
+            <i class="ph-fill ph-star-four text-[10px] text-gold pt-2"></i>
+            <span class="mx-12 font-display text-xl text-rose/40 italic">Amor Fati</span>
+            <i class="ph-fill ph-star-four text-[10px] text-gold pt-2"></i>
+        </div>
+    </div>
+
+    <!-- The Tarot Section -->
+    <section id="tarot" class="py-32 px-6 relative max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            
+            <!-- Floating Cards Visual -->
+            <div class="relative h-[600px] w-full flex items-center justify-center perspective-[1000px] group animate-float">
+                <!-- Background Glow - Intensified for Contrast -->
+                <div class="absolute inset-0 bg-crimson/20 blur-[100px] rounded-full mix-blend-screen"></div>
+
+                <!-- Card 1 -->
+                <div class="absolute w-64 h-96 card-surface rounded-xl transform -rotate-6 translate-x-[-60px] hover:-translate-x-[-80px] transition-all duration-500 overflow-hidden z-0">
+                    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20"></div>
+                    <img src="https://images.unsplash.com/photo-1600429991827-5224817554f8?fm=jpg&amp;q=60&amp;w=3000&amp;ixlib=rb-4.1.0&amp;ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFyb3QlMjBjYXJkc3xlbnwwfHwwfHx8MA%3D%3D" )="" class="w-full h-full object-cover opacity-80" alt="Tarot Card Back">
+                    <div class="absolute inset-0 flex items-center justify-center bg-black/40">
+                        <i class="ph-thin ph-moon-stars text-4xl text-white/50"></i>
+                    </div>
+                </div>
+
+                <!-- Card 2 (Hero) - Made Lighter -->
+                <div class="absolute w-64 h-96 bg-[#1f0b0b] border border-gold/40 rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.9)] z-10 transform rotate-3 hover:scale-105 transition-all duration-500">
+                    <!-- Inner Texture -->
+                    <div class="absolute inset-2 border border-gold/20 rounded-lg flex flex-col items-center justify-between p-6 bg-gradient-to-b from-[#2a1012] to-[#1a0505]">
+                        <div class="w-full flex justify-between text-gold font-display text-xl">
+                            <span>VI</span>
+                            <i class="ph-fill ph-heart"></i>
+                        </div>
+                        <div class="text-center relative z-10">
+                             <div class="w-20 h-20 rounded-full border border-gold/30 flex items-center justify-center mx-auto mb-4 bg-black/30 backdrop-blur-sm">
+                                <i class="ph-light ph-users-three text-3xl text-gold"></i>
+                             </div>
+                            <h3 class="font-display text-4xl text-white text-center drop-shadow-md">The<br>Lovers</h3>
+                            <p class="font-script text-rose/80 text-2xl mt-2">Duality</p>
+                        </div>
+                        <div class="w-full flex justify-between text-gold font-display text-xl transform rotate-180">
+                            <span>VI</span>
+                            <i class="ph-fill ph-heart"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="reveal-view pl-0 lg:pl-10">
+                <span class="font-sans text-[10px] tracking-[0.3em] uppercase text-crimson font-bold mb-4 block">The Practice</span>
+                <h2 class="font-display text-5xl md:text-7xl text-white mb-8 leading-[0.9]">
+                    Consult the <br>
+                    <span class="font-script text-6xl text-gradient-gold ml-8">Oracle</span>
+                </h2>
+                <p class="font-display text-xl text-rose/70 leading-relaxed mb-10 border-l border-gold/30 pl-6">
+                    Tarot is not fortune telling. It is a mirror for the soul. Amor Fati combines ancient archetypes with modern journaling to help you fall in love with your own narrative.
+                </p>
+                
+                <div class="grid grid-cols-1 gap-6">
+                    <div class="gold-border-corner p-6 bg-white/5">
+                        <div class="flex items-center gap-4 mb-2">
+                             <i class="ph-light ph-hands-praying text-2xl text-gold"></i>
+                             <h4 class="font-display text-2xl text-white">Daily Draw</h4>
+                        </div>
+                        <p class="font-sans text-xs text-gray-400 font-light leading-relaxed tracking-wide">
+                            Start your morning with intention. One card to guide your energy before the world intrudes.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW FEATURE SECTION: THE DIGITAL ALTAR -->
+    <section id="features" class="py-32 bg-gradient-to-b from-void via-[#150a0a] to-void relative overflow-hidden">
+        
+        <!-- Decoration -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-32 bg-gradient-to-b from-gold/0 via-gold/50 to-gold/0"></div>
+
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-24 reveal-view">
+                <h2 class="font-display text-4xl md:text-5xl text-white mb-2">The Digital Altar</h2>
+                <p class="font-script text-3xl text-rose/60">Tools for the internal journey</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <!-- Feat 1 -->
+                <div class="reveal-view group relative h-96 bg-[#1a0f0f] border border-white/10 hover:border-gold/40 transition-all duration-500 rounded-sm overflow-hidden shadow-2xl">
+                    <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&amp;w=800&amp;auto=format&amp;fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity duration-500" alt="Planetary">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                    
+                    <div class="absolute inset-0 p-8 flex flex-col items-center text-center justify-end pb-16 relative z-10">
+                        <div class="w-16 h-16 rounded-full bg-void/50 backdrop-blur-md border border-white/10 flex items-center justify-center mb-4 group-hover:border-gold/50 transition-colors">
+                            <i class="ph-thin ph-planet text-3xl text-gold"></i>
+                        </div>
+                        <h3 class="font-display text-2xl text-white mb-2">Planetary Transits</h3>
+                        <p class="font-sans text-xs text-rose-100/70 leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-4 group-hover:translate-y-0">
+                            Real-time astrological data superimposed on your readings. Understand the 'Why'.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Feat 2 -->
+                <div class="reveal-view group relative h-96 bg-[#1a0f0f] border border-white/10 hover:border-gold/40 transition-all duration-500 rounded-sm overflow-hidden shadow-2xl mt-0 md:-mt-12">
+                    <img src="https://images.unsplash.com/photo-1483546363825-7ebf25fb7513?fm=jpg&amp;q=60&amp;w=3000&amp;ixlib=rb-4.1.0&amp;ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8am91cm5hbHxlbnwwfHwwfHx8MA%3D%3D" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity duration-500" alt="Journal">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+
+                    <div class="absolute inset-0 p-8 flex flex-col items-center text-center justify-end pb-16 relative z-10">
+                         <div class="w-16 h-16 rounded-full bg-void/50 backdrop-blur-md border border-white/10 flex items-center justify-center mb-4 group-hover:border-gold/50 transition-colors">
+                            <i class="ph-thin ph-pen-nib text-3xl text-gold"></i>
+                        </div>
+                        <h3 class="font-display text-2xl text-white mb-2">Shadow Work Journal</h3>
+                        <p class="font-sans text-xs text-rose-100/70 leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-4 group-hover:translate-y-0">
+                            Prompts derived from Jungian psychology to help you integrate your subconscious.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Feat 3 -->
+                <div class="reveal-view group relative h-96 bg-[#1a0f0f] border border-white/10 hover:border-gold/40 transition-all duration-500 rounded-sm overflow-hidden shadow-2xl">
+                    <img src="https://images.unsplash.com/photo-1519074069444-1ba4fff66d16?q=80&amp;w=800&amp;auto=format&amp;fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity duration-500" alt="Galaxy">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+
+                    <div class="absolute inset-0 p-8 flex flex-col items-center text-center justify-end pb-16 relative z-10">
+                         <div class="w-16 h-16 rounded-full bg-void/50 backdrop-blur-md border border-white/10 flex items-center justify-center mb-4 group-hover:border-gold/50 transition-colors">
+                            <i class="ph-thin ph-sparkle text-3xl text-gold"></i>
+                        </div>
+                        <h3 class="font-display text-2xl text-white mb-2">AI Interpretations</h3>
+                        <p class="font-sans text-xs text-rose-100/70 leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-4 group-hover:translate-y-0">
+                            Our oracle engine synthesizes card meanings with your custom spread context.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Quote -->
+    <section class="relative py-32 flex items-center justify-center">
+        <div class="text-center px-6 max-w-3xl reveal-view">
+             <i class="ph-fill ph-quotes text-6xl text-white/5 mb-8 inline-block"></i>
+             <p class="font-display text-3xl md:text-5xl text-rose-100/90 leading-tight">"We are not here to choose our fate, but to<span class="font-script text-6xl text-gold block mt-2">embrace it"</span></p>
+        </div>
+    </section>
+
+    <!-- NEW SECTION: TESTIMONIALS (THE ECHOES) -->
+    <section class="py-24 bg-oxblood/5 relative overflow-hidden">
+        <!-- Floating abstract shapes -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-crimson/5 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-gold/5 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 reveal-view">
+                <div>
+                    <span class="font-sans text-[10px] tracking-[0.3em] uppercase text-gold font-bold mb-2 block">Testimonials</span>
+                    <h2 class="font-display text-4xl md:text-5xl text-white">Echoes from the <span class="italic text-rose/60">Void</span></h2>
+                </div>
+                <div class="hidden md:flex gap-4">
+                    <button class="w-12 h-12 rounded-full border border-white/10 hover:border-gold/50 flex items-center justify-center text-white transition-colors"><i class="ph-light ph-arrow-left"></i></button>
+                    <button class="w-12 h-12 rounded-full border border-white/10 hover:border-gold/50 flex items-center justify-center text-white transition-colors"><i class="ph-light ph-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Review 1 -->
+                <div class="reveal-view bg-[#0a0505] p-8 border border-white/10 hover:border-crimson/40 transition-colors duration-500 group">
+                    <div class="mb-6 text-gold/60 text-xs tracking-widest uppercase flex items-center gap-2">
+                        <i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i>
+                    </div>
+                    <p class="font-display text-xl text-rose-100/80 leading-relaxed italic mb-8">
+                        "I used to fear the Death card. Amor Fati taught me it was just a shedding of skin. The journaling prompts are utterly transformative."
+                    </p>
+                    <div class="flex items-center gap-4 border-t border-white/5 pt-6">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&amp;w=200&amp;auto=format&amp;fit=crop" class="w-10 h-10 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all" alt="User Avatar">
+                        <div>
+                            <span class="block font-sans text-xs text-white uppercase tracking-widest">Elara V.</span>
+                            <span class="block font-sans text-[10px] text-white/40">Scorpio Sun</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 2 -->
+                <div class="reveal-view bg-[#0a0505] p-8 border border-white/10 hover:border-crimson/40 transition-colors duration-500 group mt-0 md:mt-12">
+                    <div class="mb-6 text-gold/60 text-xs tracking-widest uppercase flex items-center gap-2">
+                        <i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i>
+                    </div>
+                    <p class="font-display text-xl text-rose-100/80 leading-relaxed italic mb-8">
+                        "Unlike other apps that feel like games, this feels like a sacred ritual. The AI synthesis of my birth chart with the daily draw is scarily accurate."
+                    </p>
+                    <div class="flex items-center gap-4 border-t border-white/5 pt-6">
+                        <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&amp;w=200&amp;auto=format&amp;fit=crop" class="w-10 h-10 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all" alt="User Avatar">
+                        <div>
+                            <span class="block font-sans text-xs text-white uppercase tracking-widest">Marcus T.</span>
+                            <span class="block font-sans text-[10px] text-white/40">Capricorn Rising</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 3 -->
+                <div class="reveal-view bg-[#0a0505] p-8 border border-white/10 hover:border-crimson/40 transition-colors duration-500 group">
+                    <div class="mb-6 text-gold/60 text-xs tracking-widest uppercase flex items-center gap-2">
+                        <i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i>
+                    </div>
+                    <p class="font-display text-xl text-rose-100/80 leading-relaxed italic mb-8">
+                        "A digital sanctuary. The design is breathtaking, but the content is where the magic lies. I've never felt more connected to my intuition."
+                    </p>
+                    <div class="flex items-center gap-4 border-t border-white/5 pt-6">
+                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&amp;w=200&amp;auto=format&amp;fit=crop" class="w-10 h-10 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all" alt="User Avatar">
+                        <div>
+                            <span class="block font-sans text-xs text-white uppercase tracking-widest">Sarah J.</span>
+                            <span class="block font-sans text-[10px] text-white/40">Pisces Moon</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Membership -->
+    <section id="journal" class="py-24 px-6 max-w-6xl mx-auto border-t border-white/10">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+            
+            <!-- Tier 1 -->
+            <div class="bg-[#121212] border border-white/10 hover:border-gold/30 hover:bg-[#1a1a1a] p-8 flex flex-col items-center text-center transition-all duration-300 reveal-view shadow-lg">
+                <span class="font-display text-xl text-rose/60 mb-4">The Initiate</span>
+                <span class="font-sans text-3xl text-white mb-8">Free</span>
+                <ul class="font-sans text-[10px] uppercase tracking-widest text-gray-400 space-y-4 mb-10 flex-1">
+                    <li>3 Card Spreads</li>
+                    <li>Moon Phases</li>
+                    <li>Basic Journal</li>
+                </ul>
+                <button class="w-full py-3 border border-white/20 text-white font-sans text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-colors">Begin</button>
+            </div>
+
+            <!-- Tier 2 -->
+            <div class="bg-[#2a0a12] border border-crimson/60 p-10 flex flex-col items-center text-center transform scale-105 shadow-[0_0_50px_rgba(107,24,30,0.3)] relative reveal-view">
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gold px-4 py-1 shadow-lg">
+                    <span class="text-black font-sans text-[9px] uppercase font-bold tracking-widest">Most Beloved</span>
+                </div>
+                <span class="font-display text-2xl text-gold mb-4">The Mystic</span>
+                <span class="font-sans text-4xl text-white mb-8">$12</span>
+                <ul class="font-sans text-[10px] uppercase tracking-widest text-gray-300 space-y-4 mb-10 flex-1">
+                    <li class="text-white"><i class="ph-fill ph-star text-gold mr-1"></i> Unlimited Spreads</li>
+                    <li>Birth Chart Insights</li>
+                    <li>AI Synthesis</li>
+                    <li>Past Life Regression</li>
+                </ul>
+                <button class="w-full py-4 bg-gold text-black font-sans text-[10px] uppercase tracking-widest hover:bg-white transition-colors">Join Circle</button>
+            </div>
+
+            <!-- Tier 3 -->
+            <div class="bg-[#121212] border border-white/10 hover:border-gold/30 hover:bg-[#1a1a1a] p-8 flex flex-col items-center text-center transition-all duration-300 reveal-view shadow-lg">
+                <span class="font-display text-xl text-rose/60 mb-4">The High Priestess</span>
+                <span class="font-sans text-3xl text-white mb-8">$29</span>
+                <ul class="font-sans text-[10px] uppercase tracking-widest text-gray-400 space-y-4 mb-10 flex-1">
+                    <li>1-on-1 Readings</li>
+                    <li>Physical Deck</li>
+                    <li>Secret Community</li>
+                </ul>
+                <button class="w-full py-3 border border-white/20 text-white font-sans text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-colors">Ascend</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW SECTION: BLOG (THE GRIMOIRE) -->
+    <section class="py-32 bg-black relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex items-end justify-between mb-16 reveal-view">
+                 <div>
+                    <span class="font-sans text-[10px] tracking-[0.3em] uppercase text-crimson font-bold mb-2 block">The Library</span>
+                    <h2 class="font-display text-4xl md:text-5xl text-white">The <span class="font-script text-6xl text-gold">Grimoire</span></h2>
+                </div>
+                 <a href="#" class="hidden md:inline-block font-sans text-[10px] uppercase tracking-widest text-white/50 hover:text-gold transition-colors" rel="nofollow">View All Entries -&gt;</a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Post 1 -->
+                <article class="group cursor-pointer reveal-view">
+                    <div class="relative overflow-hidden aspect-[3/4] mb-6 border border-white/10">
+                        <img src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?q=80&amp;w=800&amp;auto=format&amp;fit=crop" class="object-cover w-full h-full transform group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100" alt="Crystal ball">
+                        <div class="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3 py-1 border border-white/10">
+                            <span class="font-sans text-[9px] uppercase tracking-widest text-gold">Rituals</span>
+                        </div>
+                    </div>
+                    <div class="pr-4">
+                        <span class="font-sans text-[10px] text-white/40 uppercase tracking-widest mb-2 block">Oct 24, 2023</span>
+                        <h3 class="font-display text-2xl text-white mb-3 group-hover:text-gold transition-colors">Cleansing Your Deck: A Guide to Consecration</h3>
+                        <p class="font-serif text-white/60 text-sm leading-relaxed line-clamp-2">Before you begin your journey with a new deck, you must clear the energies of the past. Here are three methods using smoke, salt, and moonlight.</p>
+                    </div>
+                </article>
+
+                <!-- Post 2 -->
+                <article class="group cursor-pointer reveal-view transition-all delay-100">
+                    <div class="relative overflow-hidden aspect-[3/4] mb-6 border border-white/10">
+                        <img src="https://images.unsplash.com/photo-1542382156909-9ae37b3f56fd?q=80&amp;w=800&amp;auto=format&amp;fit=crop" class="object-cover w-full h-full transform group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100" alt="Eclipse">
+                        <div class="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3 py-1 border border-white/10">
+                            <span class="font-sans text-[9px] uppercase tracking-widest text-gold">Astrology</span>
+                        </div>
+                    </div>
+                    <div class="pr-4">
+                        <span class="font-sans text-[10px] text-white/40 uppercase tracking-widest mb-2 block">Nov 12, 2023</span>
+                        <h3 class="font-display text-2xl text-white mb-3 group-hover:text-gold transition-colors">Surviving Saturn Return: The Great Reckoning</h3>
+                        <p class="font-serif text-white/60 text-sm leading-relaxed line-clamp-2">It arrives in your late twenties, demanding you grow up. It is not a punishment, but a graduation. How to navigate the turbulence.</p>
+                    </div>
+                </article>
+
+                <!-- Post 3 -->
+                <article class="group cursor-pointer reveal-view transition-all delay-200">
+                    <div class="relative overflow-hidden aspect-[3/4] mb-6 border border-white/10">
+                        <img src="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&amp;w=800&amp;auto=format&amp;fit=crop" class="object-cover w-full h-full transform group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100" alt="Hands">
+                        <div class="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3 py-1 border border-white/10">
+                            <span class="font-sans text-[9px] uppercase tracking-widest text-gold">Philosophy</span>
+                        </div>
+                    </div>
+                    <div class="pr-4">
+                        <span class="font-sans text-[10px] text-white/40 uppercase tracking-widest mb-2 block">Nov 28, 2023</span>
+                        <h3 class="font-display text-2xl text-white mb-3 group-hover:text-gold transition-colors">Amor Fati: Why You Must Love Your Suffering</h3>
+                        <p class="font-serif text-white/60 text-sm leading-relaxed line-clamp-2">Nietzsche's concept of 'Love of Fate' is the core of our practice. To not merely bear what is necessary, but earn to love it.</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW CALL TO ACTION SECTION -->
+    <section class="relative w-full h-[80vh] flex items-center justify-center overflow-hidden">
+        <!-- Background Imagery -->
+        <div class="absolute inset-0 bg-void">
+            <img src="https://images.unsplash.com/photo-1531306728370-e2ebd9d7bb99?q=80&amp;w=2574&amp;auto=format&amp;fit=crop" class="w-full h-full object-cover opacity-20" alt="Galaxy">
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black"></div>
+        </div>
+
+        <div class="relative z-10 text-center px-6">
+            <h2 class="font-display text-5xl md:text-8xl text-white mb-6 reveal-view">
+                Your <span class="font-script text-gold">fate</span> is waiting.
+            </h2>
+            <p class="font-sans text-white/50 tracking-[0.2em] mb-12 uppercase text-xs reveal-view">
+                Join 10,000+ souls charting their course through the stars.
+            </p>
+            
+            <div class="reveal-view">
+                <a href="#" class="relative inline-flex group items-center justify-center px-12 py-6 overflow-hidden font-display text-xl text-black bg-gold rounded-full transition-all duration-300 hover:w-80 hover:bg-white" rel="nofollow">
+                    <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full group-hover:w-full group-hover:h-56 opacity-10"></span>
+                    <span class="relative flex items-center gap-2">
+                        Get Started <i class="ph-bold ph-arrow-right"></i>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-oxblood/20 border-t border-white/5 py-16 px-6 relative z-10">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center md:items-start gap-12">
+            
+            <div class="text-center md:text-left">
+                <h1 class="font-display text-3xl text-white tracking-widest">AMOR FATI</h1>
+            </div>
+
+            <div class="flex gap-12">
+                <div class="flex flex-col gap-4 text-center md:text-left font-sans text-[10px] uppercase tracking-widest text-gray-400">
+                    <span class="text-gold font-bold mb-2">Explore</span>
+                    <a href="#" class="hover:text-white transition-colors" rel="nofollow">Features</a>
+                    <a href="#" class="hover:text-white transition-colors" rel="nofollow">Pricing</a>
+                    <a href="#" class="hover:text-white transition-colors" rel="nofollow">Manifesto</a>
+                </div>
+                <div class="flex flex-col gap-4 text-center md:text-left font-sans text-[10px] uppercase tracking-widest text-gray-400">
+                    <span class="text-gold font-bold mb-2">Connect</span>
+                    <a href="#" class="hover:text-white transition-colors" rel="nofollow">Instagram</a>
+                    <a href="#" class="hover:text-white transition-colors" rel="nofollow">TikTok</a>
+                    <a href="#" class="hover:text-white transition-colors" rel="nofollow">Contact</a>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-20 border-t border-white/5 pt-8">
+             <p class="font-sans text-[10px] uppercase text-gray-600 tracking-widest">© 2024 Amor Fati. Crafted in the Void.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Custom Cursor Logic
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+            
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+
+            cursorOutline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        // Hover expansion
+        document.querySelectorAll('a, button, .cursor-pointer').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorOutline.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                cursorOutline.style.borderColor = '#d4af37';
+                cursorOutline.style.backgroundColor = 'rgba(212, 175, 55, 0.05)';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursorOutline.style.transform = 'translate(-50%, -50%) scale(1)';
+                cursorOutline.style.borderColor = 'rgba(212, 175, 55, 0.3)';
+                cursorOutline.style.backgroundColor = 'transparent';
+            });
+        });
+
+        // Reveal on Scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal-view').forEach(el => observer.observe(el));
+    </script>
+
+
+</body></html>
