@@ -46,3 +46,5 @@
   max-width: 100%;
   overflow-x: hidden;
 }
+
+@import './assets/css/landing.css';
