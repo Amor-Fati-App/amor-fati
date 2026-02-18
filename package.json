@@ -1,0 +1,24 @@
+{
+  "name": "amor-fati",
+  "version": "1.0.0",
+  "description": "A tarot card app",
+  "homepage": "https://github.com/Amor-Fati-App/amor-fati#readme",
+  "bugs": {
+    "url": "https://github.com/Amor-Fati-App/amor-fati/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Amor-Fati-App/amor-fati.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm run dev --prefix amor-fati",
+    "build:client": "npm run build --prefix amor-fati",
+    "preview:client": "npm run preview --prefix amor-fati"
+  },
+  "devDependencies": {
+    "wait-on": "^9.0.4"
+  }
+}
