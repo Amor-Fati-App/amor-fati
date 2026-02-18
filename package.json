@@ -16,7 +16,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run dev --prefix amor-fati",
     "build:client": "npm run build --prefix amor-fati",
-    "preview:client": "npm run preview --prefix amor-fati"
+    "preview:client": "npm run preview --prefix amor-fati",
+    "install": "npm install --prefix amor-fati"
   },
   "devDependencies": {
     "wait-on": "^9.0.4"
