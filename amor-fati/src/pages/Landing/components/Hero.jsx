@@ -1,6 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
+  const navigate = useNavigate()
   return (
     <header className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden">
       <div className="absolute inset-0 bg-void">
@@ -24,12 +26,14 @@ const Hero = () => {
 
           <div className="relative select-none">
             <h1
+              data-test='hero-headline'
               className="font-display text-[14vw] md:text-[10rem] -leading-[0.85] text-white mix-blend-overlay opacity-0 animate-fade-in-up"
               style={{ animationDelay: "0.4s" }}
             >
               AMOR
             </h1>
             <h1
+              data-test='headline-2'
               className="font-script text-[15vw] md:text[11rem] leading-[0.5] text-gradient-gold opacity-0 animate-fade-in-up -mt-2 md:-mt-8 relative z-20 transform -rotate-6 origin-center"
               style={{ animationDelay: "0.6s" }}
             >
@@ -42,7 +46,7 @@ const Hero = () => {
           className="mt-16 max-w-lg opacity-0 animate-fade-in-up"
           style={{ animationDelay: "0.8s" }}
         >
-          <p className="font-display text-2xl md:text-3xl text-rose/90 leading-relaxed">
+          <p data-test='tagline' className="font-display text-2xl md:text-3xl text-rose/90 leading-relaxed">
             Fall in love with your own{" "}
             <span className="font-script text-4xl text-gold">destiny</span>
           </p>
@@ -56,7 +60,8 @@ const Hero = () => {
           style={{ animationDelay: "1.0s" }}
         >
           <a
-            href="#tarot"
+            data-test='cta-button'
+            href="/signup"
             className="group relative inline-flex items-center gap-4 px-10 py-4 bg-transparent border border-crimson/40 rounded-full transition-all duration-500 hover:bg-crimson/10 hover:border-gold/60"
             rel="nofollow"
           >

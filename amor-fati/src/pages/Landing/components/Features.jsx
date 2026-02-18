@@ -7,8 +7,8 @@ const Features = () => {
     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-32 bg-linear-to-b from-gold/0 via-gold/50 to-gold/0"></div>
 
     <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-24 reveal-view">
-            <h2 className="font-display text-4xl md:text-5xl text-white mb-2">The Digital Altar</h2>
+        <div className="text-center mb-24">
+            <h2 data-test='digital-alter' className="font-display text-4xl md:text-5xl text-white mb-2">The Digital Altar</h2>
             <p className="font-script text-3xl text-rose/60">Tools for the internal journey</p>
         </div>
 
