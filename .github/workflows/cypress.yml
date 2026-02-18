@@ -17,8 +17,9 @@ jobs:
       - name: Cypress Install
         uses: cypress-io/github-action@v6
         with:
+          working-directory: amor-fati
           runTests: false
-          build: npm run build:client 
+          build: npm run build 
 
       - name: Save build folder 
         uses: actions/upload-artifact@v4
@@ -43,6 +44,12 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          start: npm run client:preview & wait-on http://localhost:5173 
-          record: true
+          working-directory: amor-fati
+          start: npm run preview 
+          wait-on: 'http://localhost:5173' 
+          record: true 
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.GITHUB_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
     
