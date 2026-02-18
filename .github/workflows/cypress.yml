@@ -49,7 +49,7 @@ jobs:
           wait-on: 'http://localhost:5173' 
           record: true 
         env:
-          CYPRESS_RECORD_KEY: ${{ secrets.GITHUB_RECORD_KEY }}
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
     
