@@ -1,6 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
+import { useAuth } from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+
 
 const LogIn = () => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const { handleLogIn, isLoading, error, session } = useAuth()
+
+  const navigate = useNavigate()
+
+  if (session) {
+    navigate('/app')
+  }
+  
+  const login = async (e) => {
+    e.preventDefault()
+    return handleLogIn({ email, password })
+  }
+
   return (
     <div className="bg-void text-parchment font-sans min-h-screen w-full overflow-hidden flex flex-col lg:flex-row antialiased selection:bg-rose selection:text-white">
       <div className="relative w-full lg:w-[45%] h-full min-h-screen flex flex-col justify-center items-center px-6 sm:px-12 lg:px-20 z-10 bg-void border-r border-white/5 order-2 lg:order-1">
@@ -27,7 +45,7 @@ const LogIn = () => {
             </p>
           </div>
 
-          <form className="space-y-8">
+          <form onSubmit={login} className="space-y-8">
             <div className="group space-y-2">
               <label
                 htmlFor="email"
@@ -40,6 +58,8 @@ const LogIn = () => {
                   type="email"
                   id="email"
                   required
+                  onChange={e => setEmail(e.target.value)}
+                  value={email}
                   className="w-full bg-input border border-white/10 text-parchment px-4 py-4 pl-4 focus:outline-none focus:border-gold/60 focus:ring-1 focus:ring-gold/20 transition-all duration-300 placeholder-white/10 font-serif text-lg rounded-sm"
                   placeholder="name@domain.com"
                 />
@@ -70,6 +90,8 @@ const LogIn = () => {
                   required
                   className="w-full bg-input border border-white/10 text-parchment px-4 py-4 pl-4 focus:outline-none focus:border-gold/60 focus:ring-1 focus:ring-gold/20 transition-all duration-300 placeholder-white/10 font-serif text-lg rounded-sm"
                   placeholder="••••••"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
                 />
                 <i className="ph ph-lock-key absolute right-4 text-white/20 transition-colors group-focus-within:text-gold/50"></i>
               </div>
@@ -84,6 +106,9 @@ const LogIn = () => {
                 Resume Journey <i className="ph ph-arrow-right text-lg"></i>
               </span>
             </button>
+            {error && (
+              <p className='text-error font-bold'>{ error.message }</p>
+            )}
           </form>
           <div className="pt-6 border-t border-white/5 text-center lg:text-left">
             <p className="text-parchment-dim text-sm font-ui">

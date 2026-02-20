@@ -1,7 +1,27 @@
 import React, { useState } from "react";
-import {createClient} from '@supabase/supabase-js'
+import { useNavigate } from "react-router-dom";
+
+import { useAuth } from "../../hooks/useAuth";
 
 const SignUp = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+
+  const { error, success, isLoading, handleSignUp, session } = useAuth();
+
+  const navigate = useNavigate()
+
+  if (session) {
+    navigate('/app/onboarding')
+  }
+
+  const signUp = async (e) => {
+    e.preventDefault()
+
+    return handleSignUp({name, email, password})
+   
+  }
   return (
     <div className="bg-void text-parchment font-sans min-h-screen w-full flex flex-col lg:flex-row antialiased selection:bg-rose selection:text-white">
       <div className="relative w-full lg:w-[55%] h-[35vh] lg:h-screen overflow-hidden order-1 lg:order-1 group">
@@ -51,7 +71,7 @@ const SignUp = () => {
             </p>
           </div>
 
-          <form className="space-y-6">
+          <form onSubmit={signUp} className="space-y-6">
             <div className="space-y-2 group">
               <label
                 htmlFor="name"
@@ -64,6 +84,8 @@ const SignUp = () => {
                   type="text"
                   id="name"
                   required
+                  onChange={(e) => setName(e.target.value)}
+                  value={name}
                   className="w-full bg-input border border-white/10 text-parchment px-4 py-4 focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all placeholder-white/10 font-body text-l"
                   placeholder="Your Spirit Name"
                 />
@@ -83,6 +105,8 @@ const SignUp = () => {
                   type="email"
                   id="email"
                   required
+                  onChange={e => setEmail(e.target.value)}
+                  value={email}
                   className="w-full bg-input border border-white/10 text-parchment px-4 py-4 focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all placeholder-white/10 font-body text-l"
                   placeholder="name@domain.com"
                 />
@@ -101,6 +125,8 @@ const SignUp = () => {
                   type="password"
                   id="password"
                   required
+                  onChange={e => setPassword(e.target.value)}
+                  value={password}
                   className="w-full bg-input border border-white/10 text-parchment px-4 py-4 focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all placeholder-white/10 font-body text-lg"
                   placeholder="••••••"
                 />
@@ -130,6 +156,7 @@ const SignUp = () => {
             </div>
             <button
               type="submit"
+              disabled={isLoading}
               className="group w-full relative overflow-hidden bg-rose-dark hover:bg-rose text-white px-8 py-4 mt-4 transition-all duration-500 ease-out border border-rose/30 hover:border-rose/60 cursor-pointer"
             >
               <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent translate-x-[-200%] group-hover:animate-shimmer cursor-pointer"></div>
@@ -137,6 +164,12 @@ const SignUp = () => {
                 Inscribe Name <i className="ph ph-feather"></i>
               </span>
             </button>
+            {error && (
+              <p className='text-error font-bold'>{ error }</p>
+            )}
+            {success && (
+              <p className='text-gold'>Success! Check your email to log in.</p>
+            )}
           </form>
 
           <div className="mt-10 text-center border-t border-white/5 pt-8 pb-10">
@@ -144,7 +177,7 @@ const SignUp = () => {
               Already walked this path?{" "}
               <a
                 href="/login"
-                className="block mt-2 uppercase text-gold hover:text-white font-display uppercase tracking-widest text-xs transition-colors"
+                className="block mt-2 text-gold hover:text-white font-display uppercase tracking-widest text-xs transition-colors"
                 rel="nofollow"
               >
                 Return to the Circle
