@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Amor Fati - Return to the Circle</title>
+
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;800&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Manrope:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Tailwind Configuration -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              void: "#050404" /* Deepest Black */,
+              ash: "#0F0B0B" /* Panel Background */,
+              gold: "#D4AF37" /* Primary Accent */,
+              "gold-dim": "#8A7E5E" /* Muted Gold */,
+              rose: "#9F2B3E" /* Secondary Accent */,
+              "rose-dark": "#4A0E16" /* Hover States */,
+              parchment: "#E8E4D9" /* Text Base */,
+              "parchment-dim": "#A39E93" /* Secondary Text */,
+              input: "#120F0F" /* Input Fields */,
+            },
+            fontFamily: {
+              display: ["Cinzel", "serif"],
+              serif: ["Cormorant Garamond", "serif"],
+              ui: ["Manrope", "sans-serif"],
+            },
+            backgroundImage: {
+              shimmer:
+                "linear-gradient(to right, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%)",
+            },
+            animation: {
+              "fade-in": "fadeIn 1.2s ease-out forwards",
+              "slide-up": "slideUp 0.8s ease-out forwards",
+              shimmer: "shimmer 2s infinite",
+            },
+            keyframes: {
+              fadeIn: {
+                "0%": { opacity: "0" },
+                "100%": { opacity: "1" },
+              },
+              slideUp: {
+                "0%": { transform: "translateY(20px)", opacity: "0" },
+                "100%": { transform: "translateY(0)", opacity: "1" },
+              },
+              shimmer: {
+                "0%": { transform: "translateX(-200%)" },
+                "100%": { transform: "translateX(200%)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      body {
+        background-color: #050404;
+      }
+
+      /* Autofill Handler */
+      input:-webkit-autofill,
+      input:-webkit-autofill:hover,
+      input:-webkit-autofill:focus,
+      input:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 30px #120f0f inset !important;
+        -webkit-text-fill-color: #e8e4d9 !important;
+        caret-color: #d4af37;
+        transition: background-color 5000s ease-in-out 0s;
+      }
+
+      /* Video Gradient Overlay - Updated for Right Side */
+      .video-overlay {
+        background: linear-gradient(
+          to left,
+          rgba(5, 4, 4, 0) 0%,
+          rgba(5, 4, 4, 0.3) 50%,
+          rgba(5, 4, 4, 1) 95%
+        );
+      }
+
+      @media (max-width: 1024px) {
+        .video-overlay {
+          background: linear-gradient(
+            to top,
+            rgba(5, 4, 4, 1) 15%,
+            rgba(5, 4, 4, 0.5) 60%,
+            rgba(5, 4, 4, 0) 100%
+          );
+        }
+      }
+    </style>
+  </head>
+  <body
+    class="bg-void text-parchment font-ui min-h-screen w-full overflow-hidden flex flex-col lg:flex-row antialiased selection:bg-rose selection:text-white"
+  >
+    <!-- LEFT PANEL (Desktop): The Ritual Form -->
+    <!-- Switched to order-1 for desktop left alignment -->
+    <div
+      class="relative w-full lg:w-[45%] h-full min-h-screen flex flex-col justify-center items-center px-6 sm:px-12 lg:px-20 z-10 bg-void border-r border-white/5 order-2 lg:order-1"
+    >
+      <div
+        class="w-full max-w-md space-y-10 py-12 lg:py-0 animate-slide-up"
+        style="animation-delay: 0.2s"
+      >
+        <!-- Brand Mark Mobile Only -->
+        <div class="lg:hidden flex items-center justify-center mb-8 opacity-60">
+          <span
+            class="font-display tracking-[0.3em] text-[10px] text-gold uppercase flex items-center gap-2"
+          >
+            <i class="ph-fill ph-moon-stars text-lg"></i> Amor Fati
+          </span>
+        </div>
+
+        <!-- Header -->
+        <div class="space-y-4">
+          <p
+            class="font-ui text-xs tracking-[0.25em] uppercase text-rose/90 font-semibold mb-2"
+          >
+            Reconnection
+          </p>
+          <h1
+            class="font-display text-4xl lg:text-5xl text-parchment leading-tight"
+          >
+            Return to the Circle
+          </h1>
+          <p class="font-serif text-lg text-white/40 italic leading-relaxed">
+            The cards remember you. Resume your path.
+          </p>
+        </div>
+
+        <!-- Login Form -->
+        <form class="space-y-8" onsubmit="event.preventDefault()">
+          <!-- Input 1: Email -->
+          <div class="group space-y-2">
+            <label
+              for="email"
+              class="block font-ui text-xs uppercase tracking-widest text-gold-dim group-focus-within:text-gold transition-colors duration-300 ml-1"
+            >
+              Electronic Essence
+            </label>
+            <div class="relative flex items-center">
+              <input
+                type="email"
+                id="email"
+                required
+                class="w-full bg-input border border-white/10 text-parchment px-4 py-4 pl-4 focus:outline-none focus:border-gold/60 focus:ring-1 focus:ring-gold/20 transition-all duration-300 placeholder-white/10pla font-serif text-lg rounded-sm"
+                placeholder="name@domain.com"
+              />
+              <i
+                class="ph ph-envelope-simple absolute right-4 text-white/20 transition-colors group-focus-within:text-gold/50"
+              ></i>
+            </div>
+          </div>
+
+          <!-- Input 2: Password -->
+          <div class="group space-y-2">
+            <div class="flex justify-between items-center ml-1">
+              <label
+                for="password"
+                class="block font-ui text-xs uppercase tracking-widest text-gold-dim group-focus-within:text-gold transition-colors duration-300"
+              >
+                A Secret Key
+              </label>
+              <a
+                href="#"
+                class="font-ui text-[10px] uppercase tracking-widest text-white/30 hover:text-rose transition-colors"
+                rel="nofollow"
+              >
+                Forgot Binding?
+              </a>
+            </div>
+
+            <div class="relative flex items-center">
+              <input
+                type="password"
+                id="password"
+                required
+                class="w-full bg-input border border-white/10 text-parchment px-4 py-4 pl-4 focus:outline-none focus:border-gold/60 focus:ring-1 focus:ring-gold/20 transition-all duration-300 placeholder-white/10 font-serif text-lg rounded-sm"
+                placeholder="••••••"
+              />
+              <i
+                class="ph ph-lock-key absolute right-4 text-white/20 transition-colors group-focus-within:text-gold/50"
+              ></i>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            class="group w-full relative overflow-hidden bg-rose-dark hover:bg-rose text-white px-8 py-5 transition-all duration-500 ease-out border border-white/5 hover:border-rose/40 rounded-sm"
+          >
+            <!-- Shimmer Effect -->
+            <div
+              class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-200%] group-hover:animate-shimmer"
+            ></div>
+
+            <span
+              class="relative flex items-center justify-center gap-3 font-display uppercase tracking-widest text-sm font-semibold"
+            >
+              Resume Journey <i class="ph ph-arrow-right text-lg"></i>
+            </span>
+          </button>
+        </form>
+
+        <!-- Register Redirect -->
+        <div class="pt-6 border-t border-white/5 text-center lg:text-left">
+          <p class="text-parchment-dim text-sm font-ui">
+            Not yet initiated?
+            <a
+              href="register.html"
+              class="inline-block lg:block lg:mt-2 text-gold hover:text-white font-display uppercase tracking-widest text-xs transition-colors border-b border-transparent hover:border-gold/50 pb-0.5 ml-2 lg:ml-0"
+              rel="nofollow"
+            >
+              Begin the Ritual
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL (Desktop): The Atmosphere -->
+    <!-- Switched to order-2 for desktop right alignment -->
+    <div
+      class="relative w-full lg:w-[55%] h-[35vh] lg:h-screen overflow-hidden group order-1 lg:order-2"
+    >
+      <!-- Video Asset -->
+      <video
+        class="absolute top-0 left-0 w-full h-full object-cover opacity-80 transition-transform duration-[30s] ease-linear transform scale-100 group-hover:scale-110"
+        src="https://v3b.fal.media/files/b/5a8e02fa/067YOC5MlMD1_GNcDBguj_video.mp4"
+        autoplay
+        muted
+        loop
+        playsinline
+      ></video>
+
+      <!-- Texture Overlay -->
+      <div class="absolute inset-0 bg-rose-dark/10 mix-blend-overlay"></div>
+
+      <!-- Gradient Scrim: Fades from Right to Void on Left -->
+      <div class="absolute inset-0 video-overlay pointer-events-none"></div>
+
+      <!-- Atmospheric Text -->
+      <div
+        class="absolute top-1/2 right-12 lg:right-36 transform -translate-y-1/2 max-w-lg hidden lg:block opacity-0 animate-[fadeIn_2s_ease-out_1s_forwards] text-right"
+      >
+        <div class="w-16 h-[1px] bg-gold/50 mb-8 ml-auto"></div>
+        <h2
+          class="font-display text-4xl leading-tight text-white mb-6 tracking-wide drop-shadow-lg"
+        >
+          Fate is fluid.
+        </h2>
+        <p
+          class="font-serif text-2xl text-parchment-dim italic leading-relaxed"
+        >
+          "What is foretold is not a cage, but a key. You have returned to turn
+          it."
+        </p>
+        <p
+          class="font-ui text-xs text-gold/60 mt-6 uppercase tracking-widest pr-1"
+        >
+          — Oracle
+        </p>
+      </div>
+
+      <!-- Brand Watermark (Top Right now) -->
+      <div class="absolute top-8 right-8 lg:top-12 lg:right-12 z-20 opacity-80">
+        <span
+          class="font-display tracking-[0.3em] text-[10px] text-gold uppercase flex items-center justify-end gap-2"
+        >
+          Amor Fati <i class="ph-fill ph-moon-stars text-lg"></i>
+        </span>
+      </div>
+    </div>
+  </body>
+</html>

@@ -10,6 +10,7 @@ import Pricing from "./components/Pricing";
 import Blog from "./components/Blog";
 import CTA from "./components/CTA";
 import Footer from "./components/Footer";
+import SmokeCursor from "../../components/SmokeCursor";
 
 const Landing = () => {
   useEffect(() => {
@@ -31,6 +32,7 @@ const Landing = () => {
 
   return (
     <div className="selection:bg-crimson selection:text-white page">
+     
       <div className="grain-overlay"></div>
       <div className="cursor-dot hidden md:block"></div>
       <div className="cursor-outline hidden md:block"></div>

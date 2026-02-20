@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amor Fati - Begin Your Journey</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Manrope:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#050404',
+                        surface: '#0F0B0B',
+                        input: '#1a1515',
+                        gold: '#D4AF37',
+                        'gold-dim': '#8A7E5E',
+                        rose: '#9F2B3E',
+                        'rose-dark': '#4A0E16',
+                        parchment: '#E8E4D9',
+                        'parchment-dim': '#A8A499'
+                    },
+                    fontFamily: {
+                        display: ['Cinzel', 'serif'],
+                        body: ['Cormorant Garamond', 'serif'],
+                        ui: ['Manrope', 'sans-serif'],
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 1s ease-out forwards',
+                        'slide-up': 'slideUp 0.8s ease-out forwards',
+                        'shimmer': 'shimmer 3s infinite linear',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% center' },
+                            '100%': { backgroundPosition: '200% center' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050404;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D4AF37;
+        }
+
+        /* Input Auto-Fill Fix for Dark Mode */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus, 
+        input:-webkit-autofill:active{
+            -webkit-box-shadow: 0 0 0 30px #1a1515 inset !important;
+            -webkit-text-fill-color: #E8E4D9 !important;
+            caret-color: #D4AF37;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+
+        /* Smooth Video Overlay */
+        .video-overlay {
+            background: linear-gradient(to right, rgba(5,4,4,0) 0%, rgba(5,4,4,1) 100%);
+        }
+        
+        @media (max-width: 1024px) {
+            .video-overlay {
+                background: linear-gradient(to top, rgba(5,4,4,1) 15%, rgba(5,4,4,0) 100%);
+            }
+        }
+
+        /* Checkbox Customization */
+        .custom-checkbox {
+            appearance: none;
+            background-color: #1a1515;
+            margin: 0;
+            font: inherit;
+            color: currentColor;
+            width: 1.15em;
+            height: 1.15em;
+            border: 1px solid #333;
+            border-radius: 0.15em;
+            display: grid;
+            place-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .custom-checkbox::before {
+            content: "";
+            width: 0.65em;
+            height: 0.65em;
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+            box-shadow: inset 1em 1em #D4AF37;
+            transform-origin: center;
+            clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+        }
+        
+        .custom-checkbox:checked::before {
+            transform: scale(1);
+        }
+        
+        .custom-checkbox:checked {
+            border-color: #D4AF37;
+        }
+    </style>
+</head>
+<body class="bg-void text-parchment font-ui min-h-screen w-full flex flex-col lg:flex-row antialiased selection:bg-rose selection:text-white">
+
+    <!-- LEFT PANEL: VISUAL ANCHOR -->
+    <div class="relative w-full lg:w-[55%] h-[35vh] lg:h-screen overflow-hidden order-1 lg:order-1 group">
+        <!-- The Animated Asset (Same as Login for consistency) -->
+        <video 
+            src="https://v3b.fal.media/files/b/0a8efa02/084YOC5MlMD1_GNcDBguj_video.mp4" 
+            class="absolute inset-0 w-full h-full object-cover opacity-80"
+            autoplay loop muted playsinline>
+        </video>
+        
+        <!-- Gradient Mesh Overlay -->
+        <div class="absolute inset-0 video-overlay z-10 transition-opacity duration-1000"></div>
+        
+        <!-- Atmospheric Text Overlay -->
+        <div class="absolute z-20 top-1/2 left-12 lg:left-24 transform -translate-y-1/2 max-w-md hidden lg:block opacity-0 lg:animate-fade-in">
+            <div class="w-12 h-[1px] bg-gold/50 mb-6"></div>
+            <h2 class="font-display text-4xl leading-tight text-white mb-4 tracking-wide">
+                We meet at last.
+            </h2>
+            <p class="font-body text-xl text-parchment-dim italic leading-relaxed">
+                "The universe is not outside of you. Look inside yourself; everything that you want, you already are."
+            </p>
+            <p class="font-ui text-xs text-gold/60 mt-4 uppercase tracking-widest">
+                — Rumi
+            </p>
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL: REGISTRATION FORM -->
+    <div class="relative w-full lg:w-[45%] lg:h-screen bg-void flex flex-col justify-center items-center px-6 py-12 lg:px-20 order-2 lg:order-2 z-20">
+        
+        <div class="w-full max-w-md animate-slide-up" style="animation-delay: 0.2s;">
+            <!-- Simple Brand Logo -->
+            <div class="flex items-center gap-3 mb-12 opacity-80 hover:opacity-100 transition-opacity cursor-pointer">
+                <i class="ph-fill ph-moon-stars text-gold text-2xl"></i>
+                <span class="font-display text-lg tracking-[0.2em] text-white">AMOR FATI</span>
+            </div>
+
+            <div class="mb-10">
+                <h1 class="font-display text-3xl lg:text-4xl text-white mb-3">Begin the Ritual</h1>
+                <p class="font-body text-lg text-parchment-dim">Create your sanctuary to chart the unseen.</p>
+            </div>
+
+            <!-- Registration Form -->
+            <form class="space-y-6">
+                
+                <!-- Name Input -->
+                <div class="space-y-2 group">
+                    <label for="name" class="block font-ui text-xs uppercase tracking-widest text-gold-dim group-focus-within:text-gold transition-colors">
+                        How shall we call you?
+                    </label>
+                    <div class="relative">
+                        <input type="text" id="name" required 
+                            class="w-full bg-input border border-white/10 text-parchment px-4 py-4 focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all placeholder-white/10 font-body text-lg"
+                            placeholder="Your Spirit Name">
+                        <i class="ph ph-user absolute right-4 top-1/2 -translate-y-1/2 text-white/20"></i>
+                    </div>
+                </div>
+
+                <!-- Email Input -->
+                <div class="space-y-2 group">
+                    <label for="email" class="block font-ui text-xs uppercase tracking-widest text-gold-dim group-focus-within:text-gold transition-colors">
+                        Electronic Essence
+                    </label>
+                    <div class="relative">
+                        <input type="email" id="email" required 
+                            class="w-full bg-input border border-white/10 text-parchment px-4 py-4 focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all placeholder-white/10 font-body text-lg"
+                            placeholder="name@domain.com">
+                        <i class="ph ph-envelope-simple absolute right-4 top-1/2 -translate-y-1/2 text-white/20"></i>
+                    </div>
+                </div>
+
+                <!-- Password Input -->
+                <div class="space-y-2 group">
+                    <label for="password" class="block font-ui text-xs uppercase tracking-widest text-gold-dim group-focus-within:text-gold transition-colors">
+                        A Secret Key
+                    </label>
+                    <div class="relative">
+                        <input type="password" id="password" required 
+                            class="w-full bg-input border border-white/10 text-parchment px-4 py-4 focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all placeholder-white/10 font-body text-lg"
+                            placeholder="••••••">
+                        <i class="ph ph-lock-key absolute right-4 top-1/2 -translate-y-1/2 text-white/20"></i>
+                    </div>
+                </div>
+
+                <!-- Terms & Conditions -->
+                <div class="flex items-start gap-3 mt-8">
+                    <input type="checkbox" id="terms" class="custom-checkbox mt-1">
+                    <label for="terms" class="text-sm text-parchment-dim leading-relaxed">
+                        I agree to abide by the <a href="#" class="text-gold hover:text-white transition-colors underline decoration-gold/30 underline-offset-4" rel="nofollow">Sacred Terms</a> and acknowledge that my data is merely stardust.
+                    </label>
+                </div>
+
+                <!-- CTA Button -->
+                <button type="submit" 
+                    class="group w-full relative overflow-hidden bg-rose-dark hover:bg-rose text-white px-8 py-4 mt-4 transition-all duration-500 ease-out border border-rose/30 hover:border-rose/60">
+                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-200%] group-hover:animate-shimmer"></div>
+                    <span class="relative flex items-center justify-center gap-3 font-display uppercase tracking-widest text-sm">
+                        Inscribe Name <i class="ph ph-feather"></i>
+                    </span>
+                </button>
+
+            </form>
+
+            <!-- Login Link -->
+            <div class="mt-10 text-center border-t border-white/5 pt-8">
+                <p class="text-parchment-dim text-sm font-ui">
+                    Already walked this path? 
+                    <a href="login.html" class="block mt-2 text-gold hover:text-white font-display uppercase tracking-widest text-xs transition-colors" rel="nofollow">
+                        Return to the Circle
+                    </a>
+                </p>
+            </div>
+            
+        </div>
+
+        <!-- Footer Note -->
+        <div class="absolute bottom-6 left-0 w-full text-center opacity-30">
+            <p class="text-[10px] text-parchment font-ui uppercase tracking-widest">Establish. Reflect. Transcend.</p>
+        </div>
+    </div>
+
+</body>
+</html>
